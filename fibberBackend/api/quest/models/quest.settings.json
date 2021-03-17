@@ -1,0 +1,20 @@
+{
+  "kind": "collectionType",
+  "collectionName": "quests",
+  "info": {
+    "name": "quest",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "space": {
+      "type": "component",
+      "repeatable": true,
+      "component": "space.space"
+    }
+  }
+}

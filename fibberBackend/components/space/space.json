@@ -1,0 +1,56 @@
+{
+  "collectionName": "components_space_spaces",
+  "info": {
+    "name": "space",
+    "icon": "closed-captioning",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "person": {
+      "model": "file",
+      "via": "related",
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos"
+      ],
+      "plugin": "upload",
+      "required": false
+    },
+    "background": {
+      "model": "file",
+      "via": "related",
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos"
+      ],
+      "plugin": "upload",
+      "required": false
+    },
+    "text": {
+      "type": "text"
+    },
+    "audio": {
+      "model": "file",
+      "via": "related",
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos"
+      ],
+      "plugin": "upload",
+      "required": false
+    },
+    "buttons": {
+      "type": "json"
+    },
+    "person_name": {
+      "type": "string"
+    },
+    "sceneName": {
+      "type": "string"
+    }
+  }
+}
