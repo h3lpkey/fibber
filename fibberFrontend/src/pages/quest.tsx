@@ -1,38 +1,40 @@
 // If you don't want to use TypeScript you can delete this file!
 import React from "react"
 import { Link } from "gatsby"
-import SpaceInterface from "../model/quest"
+import SceneInterface from "../model/quest"
 import "../assets/main.sass"
 
 interface QuestProps {
   pageContext: {
-    space: SpaceInterface
+    scene: SceneInterface
+    questId: string
   }
 }
 
 const Quest: React.FC<QuestProps> = ({ pageContext }) => {
-  const space = pageContext.space
+  const { questId, scene } = pageContext
   return (
-    <div className="space">
+    <div className="scene">
+      <Link to="/">home</Link>
       <img
-        className="space-background"
-        src={`${space.background.childImageSharp.original.src}`}
+        className="scene-background"
+        src={`${scene.background.childImageSharp.original.src}`}
         alt=""
       />
       <img
-        className="space-person"
-        src={`${space.person.childImageSharp.original.src}`}
+        className="scene-person"
+        src={`${scene.person.childImageSharp.original.src}`}
         alt=""
       />
-      <div className="space-controls-box">
-        <p className="space-person-name">{space.person_name}</p>
-        <p className="space-text">{space.text}</p>
-        <div className="space-buttons">
-          {space.buttons.map(button => (
+      <div className="scene-controls-box">
+        <p className="scene-person-name">{scene.person_name}</p>
+        <p className="scene-text">{scene.text}</p>
+        <div className="scene-buttons">
+          {scene.buttons.map(button => (
             <Link
-              to={`/${button.link}`}
-              key={button.link}
-              className="space-buttons_button"
+              to={`/quest/${questId}/${button.link}`}
+              key={button.text}
+              className="scene-buttons_button"
             >
               {button.text}
             </Link>

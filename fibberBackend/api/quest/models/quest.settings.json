@@ -11,10 +11,24 @@
     "draftAndPublish": true
   },
   "attributes": {
-    "space": {
+    "scene": {
       "type": "component",
       "repeatable": true,
       "component": "space.space"
+    },
+    "questName": {
+      "type": "string"
+    },
+    "questImagePreview": {
+      "model": "file",
+      "via": "related",
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos"
+      ],
+      "plugin": "upload",
+      "required": false
     }
   }
 }

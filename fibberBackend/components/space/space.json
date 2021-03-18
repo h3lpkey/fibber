@@ -46,10 +46,10 @@
     "buttons": {
       "type": "json"
     },
-    "person_name": {
+    "personName": {
       "type": "string"
     },
-    "sceneName": {
+    "sceneId": {
       "type": "string"
     }
   }

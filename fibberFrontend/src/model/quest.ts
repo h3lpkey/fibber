@@ -1,6 +1,6 @@
-export default interface SpaceInterface {
+export default interface SceneInterface {
   id: number
-  sceneName: string
+  sceneId: string
   text: string
   person_name: string
   background: {

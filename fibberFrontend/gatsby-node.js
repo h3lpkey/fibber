@@ -10,11 +10,12 @@ exports.createPages = async function ({ actions, graphql }) {
     query {
       allStrapiQuest {
         nodes {
-          space {
+          id
+          scene {
             id
-            sceneName
+            sceneId
             text
-            person_name
+            personName
             buttons {
               link
               text
@@ -39,13 +40,11 @@ exports.createPages = async function ({ actions, graphql }) {
     }
   `)
   data.allStrapiQuest.nodes.forEach(quest => {
-    console.log("quest", quest)
-    quest.space.forEach(space => {
-      console.log("SPACE", space)
+    quest.scene.forEach(scene => {
       actions.createPage({
-        path: `/${space.sceneName}`,
+        path: `/quest/${quest.id}/${scene.sceneId}`,
         component: require.resolve(`./src/pages/quest.tsx`),
-        context: { space: space },
+        context: { scene: scene, questId: quest.id },
       })
     })
   })
