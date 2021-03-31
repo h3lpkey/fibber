@@ -4,21 +4,13 @@ export default interface SceneInterface {
   text: string
   person_name: string
   background: {
-    childImageSharp: {
-      original: {
-        src: string
-      }
-    }
+    publicURL: string
   }
   buttons: {
     link: string
     text: string
   }[]
   person: {
-    childImageSharp: {
-      original: {
-        src: string
-      }
-    }
+    publicURL: string
   }
 }

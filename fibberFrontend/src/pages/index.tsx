@@ -4,7 +4,6 @@ import QuestPreview from "../components/QuestPreview"
 import Layout from "../components/layout"
 const IndexPage = () => (
   <Layout>
-    <h1>Hi people</h1>
     <div className="quests-preview-list">
       <StaticQuery
         query={graphql`

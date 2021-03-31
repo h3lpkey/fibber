@@ -21,18 +21,10 @@ exports.createPages = async function ({ actions, graphql }) {
               text
             }
             background {
-              childImageSharp {
-                original {
-                  src
-                }
-              }
+              publicURL
             }
             person {
-              childImageSharp {
-                original {
-                  src
-                }
-              }
+              publicURL
             }
           }
         }
