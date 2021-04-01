@@ -14,6 +14,7 @@ interface QuestProps {
 
 const Quest: React.FC<QuestProps> = ({ pageContext }) => {
   const { questId, scene } = pageContext
+  console.log("scene", scene)
   return (
     <>
       <Header />
@@ -29,8 +30,10 @@ const Quest: React.FC<QuestProps> = ({ pageContext }) => {
           alt=""
         />
         <div className="scene-controls-box">
-          <p className="scene-person-name">{scene.person_name}</p>
+          <p className="scene-person-name">{scene.personName}:</p>
           <p className="scene-text">{scene.text}</p>
+          <br />
+          <p>Вы:</p>
           <div className="scene-buttons">
             {scene.buttons.map(button => (
               <Link

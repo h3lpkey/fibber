@@ -2,7 +2,7 @@ export default interface SceneInterface {
   id: number
   sceneId: string
   text: string
-  person_name: string
+  personName: string
   background: {
     publicURL: string
   }
