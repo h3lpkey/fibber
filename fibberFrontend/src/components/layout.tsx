@@ -1,21 +1,14 @@
-import * as React from "react"
-import PropTypes from "prop-types"
+import React, { ReactElement } from "react";
+import "../assets/sass/main.sass";
+import Header from "./header";
 
-import Header from "./header"
-import "./layout.css"
-
-const Layout = ({ children }) => {
-
+function Layout({ children }: { children: ReactElement }): ReactElement {
   return (
     <>
       <Header />
       <main>{children}</main>
     </>
-  )
+  );
 }
 
-Layout.propTypes = {
-  children: PropTypes.node.isRequired,
-}
-
-export default Layout
+export default Layout;

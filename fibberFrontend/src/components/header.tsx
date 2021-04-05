@@ -1,10 +1,10 @@
 import React, { useState } from "react"
-import { Link } from "gatsby"
+import { Link } from "react-router-dom";
 import VoiceOn from "../assets/icons/voice-on.svg"
 import VoiceOff from "../assets/icons/voice-off.svg"
 import More from "../assets/icons/dots.svg"
 
-const Header = () => {
+function Header() {
   const [volume, setVolume] = useState(true)
   const [menuVisible, setMenuVisible] = useState(false)
   return (
