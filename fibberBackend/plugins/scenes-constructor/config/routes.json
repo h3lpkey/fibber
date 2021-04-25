@@ -1,0 +1,28 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/",
+      "handler": "scenes-constructor.index",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/get-all-quests",
+      "handler": "scenes-constructor.getAllQuests",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/get-all-scenes",
+      "handler": "scenes-constructor.getAllScenes",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

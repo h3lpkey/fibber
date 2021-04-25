@@ -1,56 +1,58 @@
 {
-  "collectionName": "components_space_spaces",
+  "kind": "collectionType",
+  "collectionName": "scenes",
   "info": {
-    "name": "space",
-    "icon": "closed-captioning",
+    "name": "Scene",
     "description": ""
   },
-  "options": {},
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": false
+  },
   "attributes": {
-    "person": {
+    "Buttons": {
+      "type": "component",
+      "repeatable": true,
+      "component": "button.button"
+    },
+    "Person": {
       "model": "file",
       "via": "related",
       "allowedTypes": [
         "images",
-        "files",
         "videos"
       ],
       "plugin": "upload",
       "required": false
     },
-    "background": {
+    "Background": {
       "model": "file",
       "via": "related",
       "allowedTypes": [
         "images",
-        "files",
         "videos"
       ],
       "plugin": "upload",
-      "required": false
+      "required": true
     },
-    "text": {
-      "type": "text"
-    },
-    "audio": {
+    "Music": {
       "model": "file",
       "via": "related",
       "allowedTypes": [
-        "images",
-        "files",
-        "videos"
+        "files"
       ],
       "plugin": "upload",
       "required": false
     },
-    "buttons": {
-      "type": "json"
+    "Text": {
+      "type": "richtext"
     },
-    "personName": {
+    "PersonName": {
       "type": "string"
     },
-    "sceneId": {
-      "type": "string"
+    "SceneUID": {
+      "type": "uid"
     }
   }
 }

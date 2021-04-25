@@ -11,24 +11,19 @@
     "draftAndPublish": true
   },
   "attributes": {
-    "scene": {
+    "Scenes": {
+      "collection": "scene"
+    },
+    "Name": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "maxLength": 50
+    },
+    "DefultButtonColors": {
       "type": "component",
-      "repeatable": true,
-      "component": "space.space"
-    },
-    "questName": {
-      "type": "string"
-    },
-    "questImagePreview": {
-      "model": "file",
-      "via": "related",
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos"
-      ],
-      "plugin": "upload",
-      "required": false
+      "repeatable": false,
+      "component": "button.colors"
     }
   }
 }

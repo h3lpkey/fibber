@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_button_colors",
+  "info": {
+    "name": "colors",
+    "icon": "paint-roller"
+  },
+  "options": {},
+  "attributes": {
+    "textColor": {
+      "type": "colorpicker",
+      "columnType": "string"
+    },
+    "borderColor": {
+      "type": "colorpicker",
+      "columnType": "string"
+    },
+    "backgroundColor": {
+      "type": "colorpicker",
+      "columnType": "string"
+    }
+  }
+}

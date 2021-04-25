@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_button_buttons",
+  "info": {
+    "name": "button",
+    "icon": "archway",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "Text": {
+      "type": "string"
+    },
+    "Scene": {
+      "model": "scene"
+    },
+    "GlobalTriggerNameSetter": {
+      "type": "string"
+    },
+    "Colors": {
+      "type": "component",
+      "repeatable": false,
+      "component": "button.colors"
+    }
+  }
+}

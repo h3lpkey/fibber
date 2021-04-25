@@ -14,8 +14,9 @@ function Quest(): ReactElement {
 
   useEffect(() => {
     API.quest.getQuests().then((data) => {
-      setScene(data[0].scene[sceneId]);
-      setScenes(data[0].scene);
+      console.log(data);
+      setScene(data[0].Scenes[sceneId]);
+      setScenes(data[0].Scenes);
       setLoading(false);
     });
   }, []);
@@ -27,19 +28,19 @@ function Quest(): ReactElement {
         <div className="scene">
           <img
             className="scene-background"
-            src={`http://localhost:1337${scene.background.url}`}
+            src={`http://localhost:1337${scene.Background.url}`}
             alt=""
           />
-          <img className="scene-person" src={`http://localhost:1337${scene.person.url}`} alt="" />
+          <img className="scene-person" src={`http://localhost:1337${scene.Person.url}`} alt="" />
           <div className="scene-controls-box">
             <p className="scene-person-name">{scene.personName}:</p>
             <p className="scene-text">{scene.text}</p>
             <br />
             <p>Вы:</p>
             <div className="scene-buttons">
-              {scene.buttons.map((button: any) => (
+              {scene.Buttons.map((button: any) => (
                 <button
-                  key={button.text}
+                  key={button.Text}
                   className="scene-buttons_button"
                   onClick={() => {
                     setScene(
@@ -48,7 +49,7 @@ function Quest(): ReactElement {
                       })
                     );
                   }}>
-                  {button.text}
+                  {button.Text}
                 </button>
               ))}
             </div>
