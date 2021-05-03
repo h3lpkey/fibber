@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_scene_styles_scene_styles",
+  "info": {
+    "name": "SceneStyles",
+    "icon": "paint-brush",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "Animation": {
+      "type": "component",
+      "repeatable": false,
+      "component": "animation.animation"
+    },
+    "Button": {
+      "type": "component",
+      "repeatable": false,
+      "component": "button.colors"
+    },
+    "BackgroundColors": {
+      "type": "component",
+      "repeatable": false,
+      "component": "background-colors.background-colors"
+    }
+  }
+}

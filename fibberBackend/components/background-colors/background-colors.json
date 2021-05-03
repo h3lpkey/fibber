@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_background_colors_background_colors",
+  "info": {
+    "name": "BackgroundColors",
+    "icon": "chess-board"
+  },
+  "options": {},
+  "attributes": {
+    "backgroundColor": {
+      "type": "colorpicker",
+      "columnType": "string"
+    },
+    "borderColor": {
+      "type": "colorpicker",
+      "columnType": "string"
+    }
+  }
+}
