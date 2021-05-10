@@ -1,7 +1,7 @@
 import React, { FC, ReactElement } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import PreviewPage from "../pages/preview";
-import QuestPage from "pages/quest"
+import PreviewPage from "pages/Preview";
+import QuestPage from "pages/Quest";
 const Router: FC = (): ReactElement => {
   return (
     <BrowserRouter>

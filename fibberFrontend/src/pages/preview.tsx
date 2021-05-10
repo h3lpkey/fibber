@@ -1,10 +1,12 @@
 import React, { ReactElement } from "react";
-import Layout from "../components/layout";
-import Logo from "../assets/images/logo.svg";
+import Header from "components/Header";
+import "assets/sass/main.sass";
+import Logo from "assets/images/logo.svg";
 
 function PreviewPage(): ReactElement {
   return (
-    <Layout>
+    <>
+      <Header />
       <div className="page page-home">
         <div className="logo">
           <img src={Logo} alt="logo" />
@@ -17,7 +19,7 @@ function PreviewPage(): ReactElement {
         <button
           className="button-default button-default-big"
           onClick={() => {
-            const link = `/quest/1`;
+            const link = `/quest/0`;
             window.location.href = link;
           }}>
           Начать игру
@@ -25,7 +27,7 @@ function PreviewPage(): ReactElement {
         <button className="button-default">Начать заново</button>
         <button className="button-default">Выйти из игры</button>
       </div>
-    </Layout>
+    </>
   );
 }
 
