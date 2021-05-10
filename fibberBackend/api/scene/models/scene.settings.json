@@ -11,11 +11,6 @@
     "draftAndPublish": false
   },
   "attributes": {
-    "Buttons": {
-      "type": "component",
-      "repeatable": true,
-      "component": "button.button"
-    },
     "Person": {
       "model": "file",
       "via": "related",
@@ -51,8 +46,15 @@
     "PersonName": {
       "type": "string"
     },
-    "SceneUID": {
-      "type": "uid"
+    "Styles": {
+      "type": "component",
+      "repeatable": false,
+      "component": "scene-styles.scene-styles"
+    },
+    "Buttons": {
+      "type": "component",
+      "repeatable": true,
+      "component": "button.button"
     }
   }
 }

@@ -20,10 +20,15 @@
       "unique": true,
       "maxLength": 50
     },
-    "DefultButtonColors": {
+    "DefaultStyles": {
       "type": "component",
       "repeatable": false,
-      "component": "button.colors"
+      "component": "scene-styles.scene-styles"
+    },
+    "Buttons": {
+      "type": "component",
+      "repeatable": false,
+      "component": "button.button"
     }
   }
 }

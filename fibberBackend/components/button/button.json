@@ -15,11 +15,6 @@
     },
     "GlobalTriggerNameSetter": {
       "type": "string"
-    },
-    "Colors": {
-      "type": "component",
-      "repeatable": false,
-      "component": "button.colors"
     }
   }
 }

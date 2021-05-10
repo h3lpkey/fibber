@@ -20,10 +20,17 @@ function Quest(): ReactElement {
     });
   }, []);
 
+  const setSceneById = (id: number) => {
+    const fndScene = scenes.find((scene: any) => {
+      return scene.id === id;
+    });
+    setScene(fndScene);
+  };
+
   return (
     <>
       <Header />
-      {!loading && <Scene scene={scene} />}
+      {!loading && <Scene scene={scene} setSceneById={setSceneById} />}
     </>
   );
 }
