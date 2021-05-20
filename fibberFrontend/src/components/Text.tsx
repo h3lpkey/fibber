@@ -1,6 +1,6 @@
 import React, { ReactElement } from "react";
 
-function Text({ text }: { text: any }): ReactElement {
+function Text({ text }: { text: string }): ReactElement {
   return <p className="scene-text">{text}</p>;
 }
 

@@ -1,12 +1,17 @@
-import React, { useState } from "react"
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import VoiceOn from "../assets/icons/voice-on.svg"
-import VoiceOff from "../assets/icons/voice-off.svg"
-import More from "../assets/icons/dots.svg"
+import VoiceOn from "../assets/icons/voice-on.svg";
+import VoiceOff from "../assets/icons/voice-off.svg";
+import More from "../assets/icons/dots.svg";
+import { useDispatch, useSelector } from "react-redux";
+import { setVolumeMute } from "store/actions";
 
 function Header() {
-  const [volume, setVolume] = useState(true)
-  const [menuVisible, setMenuVisible] = useState(false)
+  const dispatch = useDispatch();
+  const { volumeMute } = useSelector((state: { settings: any }) => state.settings);
+
+  const [menuVisible, setMenuVisible] = useState<boolean>(false);
+
   return (
     <header>
       <div className="header">
@@ -14,10 +19,9 @@ function Header() {
           <div
             className="button"
             onClick={() => {
-              setVolume(!volume)
-            }}
-          >
-            {volume ? (
+              dispatch(setVolumeMute(!volumeMute))
+            }}>
+            {volumeMute ? (
               <img className="icon" src={VoiceOn} alt="voice control" />
             ) : (
               <img className="icon" src={VoiceOff} alt="voice control" />
@@ -26,9 +30,8 @@ function Header() {
           <div
             className={`button ${menuVisible ? "button-active" : ""}`}
             onClick={() => {
-              setMenuVisible(!menuVisible)
-            }}
-          >
+              setMenuVisible(!menuVisible);
+            }}>
             <img className="icon" src={More} alt="game control" />
             <ul className={`menu-list ${menuVisible ? "menu-show" : ""}`}>
               <li className="menu-item">
@@ -40,7 +43,7 @@ function Header() {
         </div>
       </div>
     </header>
-  )
+  );
 }
 
-export default Header
+export default Header;

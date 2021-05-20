@@ -1,8 +1,8 @@
 import React, { ReactElement } from "react";
 
 function Background({ background }: { background: any }): ReactElement {
-  console.log("Background", background);
-  return <img className="scene-background" src={`http://localhost:1337${background.url}`} alt="" />;
+  const url = process.env.REACT_APP_BACKEND_URL;
+  return <img className="scene-background" src={`${url}${background.url}`} alt="" />;
 }
 
 export default Background;
