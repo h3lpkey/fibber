@@ -19,7 +19,8 @@
         "videos"
       ],
       "plugin": "upload",
-      "required": false
+      "required": false,
+      "pluginOptions": {}
     },
     "Background": {
       "model": "file",
@@ -29,7 +30,8 @@
         "videos"
       ],
       "plugin": "upload",
-      "required": true
+      "required": true,
+      "pluginOptions": {}
     },
     "Music": {
       "model": "file",
@@ -38,7 +40,8 @@
         "files"
       ],
       "plugin": "upload",
-      "required": false
+      "required": false,
+      "pluginOptions": {}
     },
     "Text": {
       "type": "richtext"
@@ -55,6 +58,9 @@
       "type": "component",
       "repeatable": true,
       "component": "button.button"
+    },
+    "SceneName": {
+      "type": "string"
     }
   }
 }

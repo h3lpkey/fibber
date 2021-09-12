@@ -4,18 +4,21 @@
  *
  */
 
-import React, { memo, useState, useEffect } from "react";
-// import PropTypes from 'prop-types';
-import pluginId from "../../pluginId";
 import axios from "axios";
+import React, { memo, useEffect, useState } from "react";
+import pluginId from "../../pluginId";
+import Scene from "./components/Scene";
 
 const HomePage = () => {
   const [quests, setQuests] = useState([]);
+  const [scenes, setScenes] = useState([]);
+
   useEffect(() => {
     axios.get(`${strapi.backendURL}/${pluginId}/get-all-quests`).then(
       (response) => {
-        console.log(response.data.data);
-        setQuests(response.data.data);
+        const scenes = response.data.data[0].Scenes;
+        setQuests(response.data.data[0]);
+        setScenes(scenes);
       },
       (error) => {
         console.log(error);
@@ -25,9 +28,11 @@ const HomePage = () => {
 
   return (
     <div>
-      <p>Тут будет граф со сценами</p>
       <h2>QUESTS:</h2>
-      <pre>{JSON.stringify(quests, null, " ")}</pre>
+      {scenes.map(scene => {
+        return <Scene data={scene} />
+      })}
+      <pre>{JSON.stringify(scenes, null, " ")}</pre>
     </div>
   );
 };
