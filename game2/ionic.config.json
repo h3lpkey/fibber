@@ -1,0 +1,7 @@
+{
+  "name": "fibber",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}

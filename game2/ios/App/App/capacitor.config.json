@@ -1,0 +1,13 @@
+{
+  "appId": "h3lpkey.fibber",
+  "appName": "Fibber",
+  "bundledWebRuntime": false,
+  "npmClient": "yarn",
+  "webDir": "public",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  },
+  "cordova": {}
+}
