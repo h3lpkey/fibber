@@ -78,7 +78,6 @@ const Media = (): ReactElement => {
         </Dragger>
         <div className="media-gallery">
           {media.map((item) => {
-            console.log(item);
             switch (item.mime) {
               case `image/jpeg`:
               case `image/png`:

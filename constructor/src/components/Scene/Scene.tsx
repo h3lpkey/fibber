@@ -14,10 +14,9 @@ import dialogBackground from "assets/images/dialogBackground.svg";
 import nameBubble from "assets/images/nameBubble.svg";
 import { TQuest } from "models/quest";
 import { Tbutton, TScene, TSceneStatus } from "models/scene";
-import { StateMedia, StateQuests } from "models/store";
+import { StateMedia, StateQuests, StateScene } from "models/store";
 import { ReactElement, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { ReactSVG } from "react-svg";
 import { setQuest, setScene } from "store/actions";
 import "./Scene.sass";
 
@@ -33,11 +32,8 @@ const Scene = (): ReactElement => {
   const [form] = Form.useForm();
 
   const { media } = useSelector((state: { media: StateMedia }) => state.media);
-  const { quest, scene } = useSelector(
-    (state: { quest: StateQuests }) => state.quest
-  );
-
-  console.log(`scene`, scene);
+  const { quest } = useSelector((state: { quest: StateQuests }) => state.quest);
+  const { scene } = useSelector((state: { scene: StateScene }) => state);
 
   useEffect(() => {
     setEditMode(false);
@@ -45,11 +41,27 @@ const Scene = (): ReactElement => {
     quest.Scenes.forEach((scen) => {
       scen.Buttons.forEach((button) => {
         if (button.GlobalTriggerNameSetter) {
-          allTriger.push(button.GlobalTriggerNameSetter);
+          allTriger.push(...button.GlobalTriggerNameSetter.split(" "));
         }
       });
     });
     setAllTrigerGetter(allTriger);
+    form.setFieldsValue({
+      PersonName: scene.PersonName,
+      SceneName: scene.SceneName,
+      Text: scene.Text,
+      Background: scene.Background ? scene.Background.id : "",
+      Person: scene.Person ? scene.Person.id : "",
+      Music: scene.Music ? scene.Music.id : "",
+      Buttons: scene.Buttons.map((button) => {
+        return {
+          Text: button.Text,
+          Scene: button.Scene.id,
+          GlobalTriggerNameSetter: button.GlobalTriggerNameSetter,
+          GlobalTriggerNameGetter: button.GlobalTriggerNameGetter,
+        };
+      }),
+    });
   }, [scene]);
 
   if (scene === undefined || scene.id === undefined) {

@@ -1,9 +1,8 @@
 import { request } from "api";
 
 export default {
-  getQuests: () => request(`http://localhost:1337/quests`, "get"),
-  getQuestById: (id: string | number) =>
-    request(`http://localhost:1337/quests/${id}`),
+  getQuests: () => request(`/quests`, "get"),
+  getQuestById: (id: string | number) => request(`/quests/${id}`),
   updateQuest: (id: string | number, params: any) =>
-    request(`http://localhost:1337/quests/${id}`, "put", params),
+    request(`/quests/${id}`, "put", params),
 };

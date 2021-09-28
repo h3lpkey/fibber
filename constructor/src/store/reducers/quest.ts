@@ -1,13 +1,12 @@
 import { TQuest } from "models/quest";
 import { TScene } from "models/scene";
 import { StateQuests } from "models/store";
-import { SET_QUEST, SET_QUESTS, SET_SCENE } from "store/actions";
+import { SET_QUEST, SET_QUESTS } from "store/actions";
 
 const initState = {
   isLoading: true,
   quests: [],
   quest: {} as TQuest,
-  scene: {} as TScene,
   error: null,
 };
 
@@ -27,12 +26,6 @@ export const quest = (
         ...state,
         isLoading: false,
         quest: action.payload,
-      };
-    case SET_SCENE:
-      return {
-        ...state,
-        isLoading: false,
-        scene: action.payload,
       };
     default:
       return state;

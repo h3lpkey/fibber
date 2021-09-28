@@ -14,10 +14,10 @@ export type StateDefault = {
 export type StateQuests = StateDefault & {
   quests: TQuest[];
   quest: TQuest;
-  scene: TScene;
 };
 
 export type StateUI = StateDefault & TUI;
+export type StateScene = StateDefault & TScene;
 export type StateMedia = StateDefault & {
   media: any[];
 };
