@@ -59,8 +59,14 @@
       "repeatable": true,
       "component": "button.button"
     },
-    "SceneName": {
+    "ToSceneId": {
+      "type": "integer"
+    },
+    "Notification": {
       "type": "string"
+    },
+    "PersonPositionLeft": {
+      "type": "boolean"
     }
   }
 }

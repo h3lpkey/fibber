@@ -9,7 +9,7 @@ const Router: FC = (): ReactElement => {
     <BrowserRouter>
       <Switch>
         <Route
-          path={[`/`, `/quests`, `/deploy`]}
+          path={[`/`, `/quests`, `/deploy`, `/game`]}
           exact={true}
           component={Quests}
         />
@@ -18,6 +18,7 @@ const Router: FC = (): ReactElement => {
           exact={true}
           component={Constructor}
         />
+        <Route path={[`/game/:questId`]} exact={true} component={Constructor} />
         <Route path={[`/resourses`]} exact={true} component={Media} />
       </Switch>
     </BrowserRouter>

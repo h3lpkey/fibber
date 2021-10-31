@@ -16,6 +16,7 @@ import "./Media.sass";
 
 const Media = (): ReactElement => {
   const Dispatch = useDispatch();
+  const url = window.location.hostname;
   const { media, isLoading } = useSelector(
     (state: { media: StateMedia }) => state.media
   );
@@ -35,7 +36,7 @@ const Media = (): ReactElement => {
     name: "files",
     multiple: true,
     showUploadList: false,
-    action: "http://localhost:1337/upload/",
+    action: `http://${url}:1337/upload/`,
     onChange(info: any) {
       if (info.file.status !== "uploading") {
         console.log(info.file, info.fileList);
@@ -81,13 +82,14 @@ const Media = (): ReactElement => {
             switch (item.mime) {
               case `image/jpeg`:
               case `image/png`:
+              case `image/gif`:
                 return (
                   <Card
                     style={{ width: 300 }}
                     cover={
                       <Image
                         className="media-item media-image"
-                        src={`http://localhost:1337${item.url}`}
+                        src={`http://${url}:1337${item.url}`}
                       />
                     }
                     className="media-item"

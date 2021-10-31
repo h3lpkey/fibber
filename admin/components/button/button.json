@@ -18,6 +18,9 @@
     },
     "GlobalTriggerNameGetter": {
       "type": "string"
+    },
+    "GlobalTriggerNameSetterJson": {
+      "type": "json"
     }
   }
 }

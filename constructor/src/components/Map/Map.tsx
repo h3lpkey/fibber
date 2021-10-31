@@ -1,29 +1,33 @@
+import { PlusSquareOutlined } from "@ant-design/icons";
 import { Space, Spin } from "antd";
 import API from "api/index";
+import CSS from "csstype";
 import dagre from "dagre";
 import { TQuest } from "models/quest";
+import { TScene } from "models/scene";
 import { StateQuests, StateScene } from "models/store";
 import { ReactElement, useCallback, useEffect, useState } from "react";
 import ReactFlow, {
-  addEdge,
   Background,
   Connection,
+  ControlButton,
+  Controls,
   Edge,
   isNode,
   MiniMap,
   Node,
-  ReactFlowProvider,
-  removeElements,
 } from "react-flow-renderer";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { setMedia, setQuest, setScene } from "store/actions";
+import CustomNode from "./CustomNode";
 
 interface TMapNode {
   id: string;
-  type?: "input" | "default" | "output" | undefined;
+  type?: "input" | "default" | "output" | "selectorNode" | undefined;
   data: {
     label: string | ReactElement;
+    property?: TScene | {};
   };
   position: {
     x: number;
@@ -34,7 +38,11 @@ interface TMapNode {
 interface TMapEdge {
   id: string;
   source: string;
+  sourceHandle?: string;
   target: string;
+  label?: string;
+  type?: string;
+  labelStyle?: CSS.Properties;
   animated?: boolean;
 }
 
@@ -66,8 +74,11 @@ const elements = [
 const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));
 
-const nodeWidth = 172;
-const nodeHeight = 36;
+const nodeWidth = 400;
+const nodeHeight = 500;
+
+let id = 0;
+const getId = () => `dndnode_${id++}`;
 
 const Map = (): ReactElement => {
   let params: { questId: string } = useParams();
@@ -77,6 +88,9 @@ const Map = (): ReactElement => {
   const [sceneId, setSceneId] = useState<number>(0);
   const { quest } = useSelector((state: { quest: StateQuests }) => state.quest);
   const { scene } = useSelector((state: { scene: StateScene }) => state);
+  const nodeTypes = {
+    selectorNode: CustomNode,
+  };
 
   const questDataToMap = (questData: TQuest) => {
     const nodes: TMapNode[] = [];
@@ -86,8 +100,10 @@ const Map = (): ReactElement => {
       const firstWords = `${text.substring(0, 30)}`;
       nodes.push({
         id: sceneObj.id.toString(),
+        type: `selectorNode`,
         data: {
           label: firstWords,
+          property: sceneObj,
         },
         position: {
           x: 180 / 2 + Math.random() / 1000,
@@ -95,18 +111,31 @@ const Map = (): ReactElement => {
         },
       });
 
+      if (sceneObj.ToSceneId) {
+        edges.push({
+          id: `${sceneObj.id.toString()}-${sceneObj.ToSceneId.toString()}-${Math.random()}`,
+          source: `${sceneObj.id.toString()}`,
+          target: `${sceneObj.ToSceneId.toString()}`,
+        });
+      }
+
       sceneObj.Buttons.map((button, index) => {
-        if (button.Scene.id) {
+        if (button.Scene && button.Scene.id) {
           edges.push({
-            id: `${sceneObj.id.toString()}-${button.Scene.id.toString()}`,
-            source: sceneObj.id.toString(),
+            id: `${sceneObj.id.toString()}-${button.Scene.id.toString()}-${Math.random()}`,
+            source: `${sceneObj.id.toString()}`,
+            sourceHandle: `${index}`,
+            label: `${button.Text}`,
+            labelStyle: {
+              fontWeight: 700,
+              fontSize: `30`,
+            },
             target: button.Scene.id.toString(),
           });
         }
       });
     });
     const map = [...nodes, ...edges];
-
     return map;
   };
 
@@ -117,7 +146,7 @@ const Map = (): ReactElement => {
       setQuestMap(questDataToMap(quest));
       setLoading(false);
     }
-  }, [scene]);
+  }, [scene, quest]);
 
   useEffect(() => {
     setLoading(true);
@@ -128,9 +157,7 @@ const Map = (): ReactElement => {
           setQuestMap(questDataToMap(questData));
           setLoading(false);
         })
-        .catch((e) => {
-          console.log(e);
-        });
+        .catch((e) => {});
     }
     API.media.getAllMedia().then((media) => {
       Dispatch(setMedia(media));
@@ -141,8 +168,6 @@ const Map = (): ReactElement => {
     setQuestMap((els: any) =>
       els.map((el: any) => {
         if (el.id === sceneId.toString()) {
-          // it's important that you create a new object here
-          // in order to notify react flow about the change
           el.style = { ...el.style, backgroundColor: `#e1ccf5` };
         } else {
           el.style = { ...el.style };
@@ -201,6 +226,26 @@ const Map = (): ReactElement => {
     }
   };
 
+  const addNode = () => {
+    API.scene
+      .createScene({
+        Text: "new scene",
+      })
+      .then((newScene) => {
+        const scenes = quest.Scenes.concat(newScene);
+        API.quest.updateQuest(quest.id, {
+          ...quest,
+          Scenes: scenes,
+        });
+        const newQuest = {
+          ...quest,
+          Scenes: scenes,
+        };
+        Dispatch(setQuest(newQuest));
+        // setQuestMap(questDataToMap(newQuest));
+      });
+  };
+
   if (isLoading) {
     return (
       <Space align="center">
@@ -212,23 +257,32 @@ const Map = (): ReactElement => {
   if (quest) {
     return (
       <>
-        <ReactFlow elements={questMap} onElementClick={onClickElement}>
+        <ReactFlow
+          elements={questMap}
+          onElementClick={onClickElement}
+          nodeTypes={nodeTypes}
+        >
           <MiniMap
             nodeColor={(node: any) => {
               switch (node.type) {
                 case "input":
                   return "red";
                 case "default":
-                  return "#eee";
+                  return "#8b73fa";
                 case "output":
                   return "rgb(0,0,255)";
                 default:
-                  return "#eee";
+                  return "#8b73fa";
               }
             }}
             nodeStrokeWidth={3}
           />
           <Background variant="dots" gap={16} size={1} color="#c3b9f1" />
+          <Controls>
+            <ControlButton onClick={() => addNode()}>
+              <PlusSquareOutlined />
+            </ControlButton>
+          </Controls>
         </ReactFlow>
       </>
     );

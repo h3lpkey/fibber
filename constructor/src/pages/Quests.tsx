@@ -49,7 +49,12 @@ const Quests = (): ReactElement => {
               <Card
                 key={Quest.id}
                 title={Quest.Name}
-                extra={<Link to={`/constructor/${Quest.id}`}>Открыть</Link>}
+                extra={
+                  <Space>
+                    <Link to={`/constructor/${Quest.id}`}>Открыть</Link>
+                    <Link to={`/game/${Quest.id}`}>Играть</Link>
+                  </Space>
+                }
                 className="quest"
               >
                 <p>Сцен: {Quest.Scenes.length}</p>

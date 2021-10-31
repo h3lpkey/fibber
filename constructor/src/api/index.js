@@ -8,7 +8,8 @@ const token = localStorage.getItem("token") || null;
 if (token) {
   axios.defaults.headers.authorization = `Bearer ${token}`;
 }
-axios.defaults.baseURL = "http://localhost:1337";
+const url = window.location.hostname
+axios.defaults.baseURL = `http://${url}:1337`;
 
 export const request = (url, method, data, headers) => {
   return new Promise((resolve, reject) => {

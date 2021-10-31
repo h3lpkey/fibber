@@ -4,10 +4,12 @@ export type TScene = {
   Music: TMusic;
   Person: TPerson;
   PersonName: string;
-  SceneName: string;
   Styles: TStyles;
   Text: string;
   id: number;
+  ToSceneId: number;
+  Notification: string;
+  PersonPositionLeft: boolean;
   created_at: string;
   updated_at: string;
 };

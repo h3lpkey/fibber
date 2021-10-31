@@ -1,6 +1,5 @@
 import { Space, Spin } from "antd";
 import API from "api/index";
-import Map from "components/Map/Map";
 import Scene from "components/Scene/Scene";
 import LayoutBase from "layouts/Base";
 import { TQuest } from "models/quest";
@@ -8,14 +7,16 @@ import { StateQuests, StateScene } from "models/store";
 import { ReactElement, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
-import { setHeaderText, setMedia, setQuest } from "store/actions";
-import "./Constructor.sass";
+import { setHeaderText, setMedia, setQuest, setScene } from "store/actions";
+import Map from "../../components/Map/Map";
+import "./Game.sass";
 
-const Constructor = (): ReactElement => {
+const Game = (): ReactElement => {
   let params: { questId: string } = useParams();
   const Dispatch = useDispatch();
   const [isLoading, setLoading] = useState<boolean>(true);
   const { quest } = useSelector((state: { quest: StateQuests }) => state.quest);
+  const { scene } = useSelector((state: { scene: StateScene }) => state);
 
   useEffect(() => {
     Dispatch(setHeaderText("Ваши квесты"));
@@ -67,4 +68,4 @@ const Constructor = (): ReactElement => {
   return <h2>Load</h2>;
 };
 
-export default Constructor;
+export default Game;
