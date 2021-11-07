@@ -25,6 +25,7 @@ import CustomNode from "./CustomNode";
 interface TMapNode {
   id: string;
   type?: "input" | "default" | "output" | "selectorNode" | undefined;
+  draggable: boolean;
   data: {
     label: string | ReactElement;
     property?: TScene | {};
@@ -105,6 +106,7 @@ const Map = (): ReactElement => {
           label: firstWords,
           property: sceneObj,
         },
+        draggable: false,
         position: {
           x: 180 / 2 + Math.random() / 1000,
           y: 40 / 2,

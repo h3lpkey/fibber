@@ -4,7 +4,7 @@ import Map from "components/Map/Map";
 import Scene from "components/Scene/Scene";
 import LayoutBase from "layouts/Base";
 import { TQuest } from "models/quest";
-import { StateQuests, StateScene } from "models/store";
+import { StateQuests } from "models/store";
 import { ReactElement, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
@@ -21,16 +21,11 @@ const Constructor = (): ReactElement => {
     Dispatch(setHeaderText("Ваши квесты"));
     setLoading(true);
     if (params.questId) {
-      API.quest
-        .getQuestById(params.questId)
-        .then((questData: TQuest) => {
-          Dispatch(setHeaderText(`${questData.Name}`));
-          Dispatch(setQuest(questData));
-          setLoading(false);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+      API.quest.getQuestById(params.questId).then((questData: TQuest) => {
+        Dispatch(setHeaderText(`${questData.Name}`));
+        Dispatch(setQuest(questData));
+        setLoading(false);
+      });
     }
     API.media.getAllMedia().then((media) => {
       Dispatch(setMedia(media));

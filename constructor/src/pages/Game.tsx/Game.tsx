@@ -22,16 +22,11 @@ const Game = (): ReactElement => {
     Dispatch(setHeaderText("Ваши квесты"));
     setLoading(true);
     if (params.questId) {
-      API.quest
-        .getQuestById(params.questId)
-        .then((questData: TQuest) => {
-          Dispatch(setHeaderText(`${questData.Name}`));
-          Dispatch(setQuest(questData));
-          setLoading(false);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+      API.quest.getQuestById(params.questId).then((questData: TQuest) => {
+        Dispatch(setHeaderText(`${questData.Name}`));
+        Dispatch(setQuest(questData));
+        setLoading(false);
+      });
     }
     API.media.getAllMedia().then((media) => {
       Dispatch(setMedia(media));

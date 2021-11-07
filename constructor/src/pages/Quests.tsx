@@ -17,15 +17,10 @@ const Quests = (): ReactElement => {
 
   useEffect(() => {
     Dispatch(setHeaderText("Ваши квесты"));
-    API.quest
-      .getQuests()
-      .then((quests: TQuest[]) => {
-        Dispatch(setQuests(quests));
-        Dispatch(setHeaderText(`Ваши квесты (${quests.length})`));
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    API.quest.getQuests().then((quests: TQuest[]) => {
+      Dispatch(setQuests(quests));
+      Dispatch(setHeaderText(`Ваши квесты (${quests.length})`));
+    });
   }, []);
 
   if (isLoading) {

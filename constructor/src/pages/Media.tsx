@@ -3,13 +3,13 @@ import {
   DeleteOutlined,
   InboxOutlined,
 } from "@ant-design/icons";
-import { Button, Card, Image, message, Space, Spin, Upload } from "antd";
+import { Card, Image, message, Space, Spin } from "antd";
 import Meta from "antd/lib/card/Meta";
 import Dragger from "antd/lib/upload/Dragger";
 import API from "api/index";
 import LayoutBase from "layouts/Base";
 import { StateMedia } from "models/store";
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setHeaderText, setMedia } from "store/actions";
 import "./Media.sass";
@@ -38,9 +38,6 @@ const Media = (): ReactElement => {
     showUploadList: false,
     action: `http://${url}:1337/upload/`,
     onChange(info: any) {
-      if (info.file.status !== "uploading") {
-        console.log(info.file, info.fileList);
-      }
       if (info.file.status === "done") {
         message.success(`${info.file.name} file uploaded successfully`);
         updateMedia();

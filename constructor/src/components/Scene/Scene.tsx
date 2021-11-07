@@ -1,42 +1,18 @@
-import {
-  MinusCircleOutlined,
-  PlusOutlined,
-  StopOutlined,
-} from "@ant-design/icons";
-import {
-  Button,
-  Divider,
-  Form,
-  Input,
-  message,
-  Select,
-  Space,
-  Spin,
-  Switch,
-} from "antd";
+import { Button, message, Space, Spin } from "antd";
 import API from "api/index";
-import dialogBackground from "assets/images/dialogBackground.svg";
-import nameBubble from "assets/images/nameBubble.svg";
 import SceneForm from "components/SceneForm/SceneForm";
 import { TQuest } from "models/quest";
-import { Tbutton, TScene, TSceneStatus } from "models/scene";
-import { StateMedia, StateQuests, StateScene } from "models/store";
-import { ReactElement, useEffect, useState } from "react";
+import { StateQuests, StateScene } from "models/store";
+import { ReactElement, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setQuest, setScene } from "store/actions";
+import { setQuest } from "store/actions";
 import "./Scene.sass";
 
 const Scene = (): ReactElement => {
   const Dispatch = useDispatch();
   const url = window.location.hostname;
   const [editMode, setEditMode] = useState(false);
-  const [sceneStatus, setSceneStatus] = useState<TSceneStatus>("upgrade");
-  const [isLoading, setLoading] = useState(true);
-  const [allTrigerGetter, setAllTrigerGetter] = useState<string[]>([]);
-  const { TextArea } = Input;
-  const { Option } = Select;
 
-  const { media } = useSelector((state: { media: StateMedia }) => state.media);
   const { quest } = useSelector((state: { quest: StateQuests }) => state.quest);
   const { scene } = useSelector((state: { scene: StateScene }) => state);
 
@@ -64,11 +40,7 @@ const Scene = (): ReactElement => {
                 .then((questData: TQuest) => {
                   Dispatch(setQuest(questData));
                   message.success(`Remove success`);
-                  setLoading(false);
                 })
-                .catch((e) => {
-                  console.log(e);
-                });
             });
           }}
         >

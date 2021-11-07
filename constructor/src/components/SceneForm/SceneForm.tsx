@@ -1,21 +1,19 @@
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import {
   Button,
-  Card,
   Divider,
   Form,
   Input,
   message,
   Select,
   Space,
-  Spin,
   Switch,
 } from "antd";
 import API from "api";
 import { TQuest } from "models/quest";
-import { Tbutton, TScene } from "models/scene";
+import { TScene } from "models/scene";
 import { StateMedia, StateQuests, StateScene } from "models/store";
-import React, { memo, useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setQuest, setScene } from "store/actions";
 
@@ -29,6 +27,19 @@ export default memo(({ data }: { data: TScene }) => {
   const { scene } = useSelector((state: { scene: StateScene }) => state);
 
   const { Option } = Select;
+
+  useEffect(() => {
+    const triggers: string[] = [];
+    quest.Scenes.forEach((scene) => {
+      scene.Buttons.forEach((button) => {
+        if (button.GlobalTriggerNameSetter) {
+          const btnTriggers = button.GlobalTriggerNameSetter.split(" ");
+          btnTriggers.forEach((trig) => triggers.push(trig));
+        }
+      });
+    });
+    setAllTrigerGetter(triggers);
+  }, []);
 
   const initialValues = {
     ToSceneId: data.ToSceneId,
@@ -46,32 +57,31 @@ export default memo(({ data }: { data: TScene }) => {
         GlobalTriggerNameSetter: button.GlobalTriggerNameSetter,
         GlobalTriggerNameGetter: button.GlobalTriggerNameGetter
           ? button.GlobalTriggerNameGetter.split(" ")
-          : "",
+          : [],
       };
     }),
   };
 
   const sceneModify = (changedValues: any, allValues: any) => {
-    console.log("changedValues", changedValues);
-    console.log("all", allValues);
-
     if (changedValues.Buttons) {
+      allValues.Buttons.forEach((button: any, index: number) => {
+        // Backend store info like string, Frontend work with array of strings
+        if (button && Array.isArray(button.GlobalTriggerNameGetter)) {
+          allValues.Buttons[index].GlobalTriggerNameGetter =
+            button.GlobalTriggerNameGetter.join(" ");
+        }
+      });
       changedValues.Buttons = allValues.Buttons;
     }
     API.scene.updateScene(scene.id, changedValues).then(() => {
-      API.quest
-        .getQuestById(quest.id)
-        .then((questData: TQuest) => {
-          Dispatch(setQuest(questData));
-          const updateScene = questData.Scenes.find(
-            (newScene) => newScene.id.toString() === scene.id.toString()
-          );
-          Dispatch(setScene(updateScene));
-          message.success(`Save success`);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+      API.quest.getQuestById(quest.id).then((questData: TQuest) => {
+        Dispatch(setQuest(questData));
+        const updateScene = questData.Scenes.find(
+          (newScene) => newScene.id.toString() === scene.id.toString()
+        );
+        Dispatch(setScene(updateScene));
+        message.success(`Save success`);
+      });
     });
   };
 
@@ -120,7 +130,7 @@ export default memo(({ data }: { data: TScene }) => {
           {media.map((file) => {
             if (file.mime === "image/png" || file.mime === "image/jpeg") {
               return (
-                <Option id={file.id} value={file.id}>
+                <Option key={file.id} id={file.id} value={file.id}>
                   {file.name}
                 </Option>
               );
@@ -227,9 +237,15 @@ export default memo(({ data }: { data: TScene }) => {
                       label="Trigger Getter"
                       fieldKey={[fieldKey, "GlobalTriggerNameGetter"]}
                     >
-                      <Select>
+                      <Select mode="multiple" allowClear>
                         {allTrigerGetter.map((trigger) => {
-                          return <Option value={trigger}>{trigger}</Option>;
+                          if (trigger) {
+                            return (
+                              <Option value={trigger} key={trigger}>
+                                {trigger}
+                              </Option>
+                            );
+                          }
                         })}
                       </Select>
                     </Form.Item>

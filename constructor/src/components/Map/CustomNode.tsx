@@ -120,6 +120,7 @@ export default memo(
                   type="source"
                   position="bottom"
                   id={index.toString()}
+                  key={index.toString()}
                   onConnect={(params) => buttonLinked(params)}
                   style={{
                     left: index * 100 + 100,
@@ -129,7 +130,9 @@ export default memo(
                     bottom: -15,
                   }}
                   isConnectable={isConnectable}
-                />
+                >
+                  {Button.Text}
+                </Handle>
               );
             })}
           </>

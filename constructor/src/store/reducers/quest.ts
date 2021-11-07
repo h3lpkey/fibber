@@ -1,5 +1,4 @@
 import { TQuest } from "models/quest";
-import { TScene } from "models/scene";
 import { StateQuests } from "models/store";
 import { SET_QUEST, SET_QUESTS } from "store/actions";
 

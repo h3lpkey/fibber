@@ -122,15 +122,10 @@ const Map = (): ReactElement => {
   useEffect(() => {
     setLoading(true);
     if (params.questId) {
-      API.quest
-        .getQuestById(params.questId)
-        .then((questData: TQuest) => {
-          setQuestMap(questDataToMap(questData));
-          setLoading(false);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+      API.quest.getQuestById(params.questId).then((questData: TQuest) => {
+        setQuestMap(questDataToMap(questData));
+        setLoading(false);
+      });
     }
     API.media.getAllMedia().then((media) => {
       Dispatch(setMedia(media));
