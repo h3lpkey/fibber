@@ -1,3 +1,4 @@
+import { TGame } from "./game";
 import { TQuest } from "./quest";
 import { TScene } from "./scene";
 import { TUI } from "./ui";
@@ -21,3 +22,4 @@ export type StateScene = StateDefault & TScene;
 export type StateMedia = StateDefault & {
   media: any[];
 };
+export type StateGame = StateDefault & TGame;

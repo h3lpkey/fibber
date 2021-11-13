@@ -7,7 +7,7 @@ export type TScene = {
   Styles: TStyles;
   Text: string;
   id: number;
-  ToSceneId: number;
+  ToScenes: TToScene[];
   Notification: string;
   PersonPositionLeft: boolean;
   created_at: string;
@@ -47,8 +47,8 @@ export type Tbutton = {
   Text: string;
   id: string;
   Scene: TScene;
-  GlobalTriggerNameSetter: string;
-  GlobalTriggerNameGetter: string;
+  TriggerSetter: string;
+  TriggerGetter: string;
 };
 
 export type TMusic = {
@@ -79,6 +79,12 @@ export type TPerson = {
     small: TFormat;
     thumbnail: TFormat;
   };
+};
+
+export type TToScene = {
+  TriggerSetter: string;
+  TriggerGetter: string;
+  ToScene: TScene;
 };
 
 export type TSceneStatus = "new" | "upgrade";

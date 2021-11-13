@@ -32,9 +32,15 @@ export default memo(({ data }: { data: TScene }) => {
     const triggers: string[] = [];
     quest.Scenes.forEach((scene) => {
       scene.Buttons.forEach((button) => {
-        if (button.GlobalTriggerNameSetter) {
-          const btnTriggers = button.GlobalTriggerNameSetter.split(" ");
+        if (button.TriggerSetter) {
+          const btnTriggers = button.TriggerSetter.split(" ");
           btnTriggers.forEach((trig) => triggers.push(trig));
+        }
+      });
+      scene.ToScenes.forEach((localScene) => {
+        if (localScene.TriggerSetter) {
+          const sceneTriggers = localScene.TriggerSetter.split(" ");
+          sceneTriggers.forEach((trig) => triggers.push(trig));
         }
       });
     });
@@ -42,7 +48,6 @@ export default memo(({ data }: { data: TScene }) => {
   }, []);
 
   const initialValues = {
-    ToSceneId: data.ToSceneId,
     Notification: data.Notification,
     PersonPositionLeft: data.PersonPositionLeft,
     PersonName: data.PersonName,
@@ -50,13 +55,24 @@ export default memo(({ data }: { data: TScene }) => {
     Background: data.Background ? data.Background.id : "",
     Person: data.Person ? data.Person.id : "",
     Music: data.Music ? data.Music.id : "",
+    ToScenes: data.ToScenes.map((toScene) => {
+      if (toScene.ToScene) {
+        return {
+          ToScene: toScene.ToScene.id,
+          TriggerSetter: toScene.TriggerSetter,
+          TriggerGetter: toScene.TriggerGetter
+            ? toScene.TriggerGetter.split(" ")
+            : [],
+        };
+      }
+    }),
     Buttons: data.Buttons.map((button) => {
       return {
         Text: button.Text,
         Scene: button.Scene?.id,
-        GlobalTriggerNameSetter: button.GlobalTriggerNameSetter,
-        GlobalTriggerNameGetter: button.GlobalTriggerNameGetter
-          ? button.GlobalTriggerNameGetter.split(" ")
+        TriggerSetter: button.TriggerSetter,
+        TriggerGetter: button.TriggerGetter
+          ? button.TriggerGetter.split(" ")
           : [],
       };
     }),
@@ -66,13 +82,23 @@ export default memo(({ data }: { data: TScene }) => {
     if (changedValues.Buttons) {
       allValues.Buttons.forEach((button: any, index: number) => {
         // Backend store info like string, Frontend work with array of strings
-        if (button && Array.isArray(button.GlobalTriggerNameGetter)) {
-          allValues.Buttons[index].GlobalTriggerNameGetter =
-            button.GlobalTriggerNameGetter.join(" ");
+        if (button && Array.isArray(button.TriggerGetter)) {
+          allValues.Buttons[index].TriggerGetter =
+            button.TriggerGetter.join(" ");
         }
       });
       changedValues.Buttons = allValues.Buttons;
     }
+    // if (changedValues.ToScene) {
+    //   allValues.ToScene.forEach((scene: any, index: number) => {
+    //     // Backend store info like string, Frontend work with array of strings
+    //     if (scene && Array.isArray(scene.TriggerGetter)) {
+    //       allValues.ToScene[index].TriggerGetter =
+    //         scene.TriggerGetter.join(" ");
+    //     }
+    //   });
+    //   changedValues.ToScene = allValues.ToScene;
+    // }
     API.scene.updateScene(scene.id, changedValues).then(() => {
       API.quest.getQuestById(quest.id).then((questData: TQuest) => {
         Dispatch(setQuest(questData));
@@ -200,42 +226,122 @@ export default memo(({ data }: { data: TScene }) => {
       <Form.Item label="Notification" name="Notification">
         <Input />
       </Form.Item>
-      <Form.Item label="To Scene" name="ToSceneId">
-        <Select allowClear>
-          {quest.Scenes.map((scene) => {
-            return <Option value={scene.id}>{scene.Text}</Option>;
-          })}
-        </Select>
-      </Form.Item>
+      <Form.List name="ToScenes">
+        {(fields, { add, remove }) => (
+          <>
+            {fields.map(({ key, name, fieldKey, ...restField }) => (
+              <div id={key.toString()}>
+                To Scenes
+                <Divider />
+                <Space align="baseline" key={key} direction="horizontal">
+                  <Form.Item
+                    {...restField}
+                    name={[name, "ToScene"]}
+                    label="To Scene"
+                  >
+                    <Select style={{ width: 300 }} allowClear>
+                      {quest.Scenes.map((scene) => {
+                        return (
+                          <Option value={scene.id} key={scene.id}>
+                            {scene.Text}
+                          </Option>
+                        );
+                      })}
+                    </Select>
+                  </Form.Item>
+                  <Space direction="vertical">
+                    <Form.Item
+                      {...restField}
+                      name={[name, "TriggerSetter"]}
+                      label="Trigger Setter"
+                      fieldKey={[fieldKey, "TriggerSetter"]}
+                    >
+                      <Input placeholder="TriggerSetter" />
+                    </Form.Item>
+                    <Form.Item
+                      {...restField}
+                      name={[name, "TriggerGetter"]}
+                      label="Trigger Getter"
+                      fieldKey={[fieldKey, "TriggerGetter"]}
+                    >
+                      <Select mode="multiple" allowClear>
+                        {allTrigerGetter.map((trigger) => {
+                          if (trigger) {
+                            return (
+                              <Option value={trigger} key={trigger}>
+                                {trigger}
+                              </Option>
+                            );
+                          }
+                        })}
+                      </Select>
+                    </Form.Item>
+                  </Space>
+                  <MinusCircleOutlined onClick={() => remove(name)} />
+                </Space>
+              </div>
+            ))}
+            <Form.Item>
+              <Button
+                type="dashed"
+                onClick={() => add()}
+                block
+                icon={<PlusOutlined />}
+              >
+                Add to Scene
+              </Button>
+            </Form.Item>
+          </>
+        )}
+      </Form.List>
+
       <Form.List name="Buttons">
         {(fields, { add, remove }) => (
           <>
             {fields.map(({ key, name, fieldKey, ...restField }) => (
               <div id={key.toString()}>
+                Buttons
                 <Divider />
                 <Space align="baseline" key={key} direction="horizontal">
-                  <Form.Item
-                    {...restField}
-                    name={[name, "Text"]}
-                    label="Text"
-                    fieldKey={[fieldKey, "Text"]}
-                  >
-                    <Input placeholder="Text" />
-                  </Form.Item>
                   <Space direction="vertical">
                     <Form.Item
                       {...restField}
-                      name={[name, "GlobalTriggerNameSetter"]}
-                      label="Trigger Setter"
-                      fieldKey={[fieldKey, "GlobalTriggerNameSetter"]}
+                      name={[name, "Text"]}
+                      label="Text"
+                      fieldKey={[fieldKey, "Text"]}
                     >
-                      <Input placeholder="GlobalTriggerNameSetter" />
+                      <Input placeholder="Text" />
                     </Form.Item>
                     <Form.Item
                       {...restField}
-                      name={[name, "GlobalTriggerNameGetter"]}
+                      name={[name, "Scene"]}
+                      label="To Scene"
+                    >
+                      <Select allowClear>
+                        {quest.Scenes.map((scene) => {
+                          return (
+                            <Option value={scene.id} key={scene.id}>
+                              {scene.Text}
+                            </Option>
+                          );
+                        })}
+                      </Select>
+                    </Form.Item>
+                  </Space>
+                  <Space direction="vertical">
+                    <Form.Item
+                      {...restField}
+                      name={[name, "TriggerSetter"]}
+                      label="Trigger Setter"
+                      fieldKey={[fieldKey, "TriggerSetter"]}
+                    >
+                      <Input placeholder="TriggerSetter" />
+                    </Form.Item>
+                    <Form.Item
+                      {...restField}
+                      name={[name, "TriggerGetter"]}
                       label="Trigger Getter"
-                      fieldKey={[fieldKey, "GlobalTriggerNameGetter"]}
+                      fieldKey={[fieldKey, "TriggerGetter"]}
                     >
                       <Select mode="multiple" allowClear>
                         {allTrigerGetter.map((trigger) => {

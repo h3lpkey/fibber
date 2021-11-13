@@ -14,6 +14,24 @@ export const setUI = createAction(SET_UI);
 export const setHeaderText = createAction(SET_HEADER_TEXT);
 export const setMedia = createAction(SET_MEDIA);
 
+export const SET_GAME_PLAY = "SET_GAME_PLAY";
+export const setGamePlay = createAction(SET_GAME_PLAY);
+export const SET_GAME_STOP = "SET_GAME_STOP";
+export const setGameStop = createAction(SET_GAME_STOP);
+export const SET_GAME_PAUSE = "SET_GAME_PAUSE";
+export const setGamePause = createAction(SET_GAME_PAUSE);
+
+export const SET_GAME_MUSIC_PLAY = "SET_GAME_MUSIC_PLAY";
+export const setGameMusicPlay = createAction(SET_GAME_MUSIC_PLAY);
+export const SET_GAME_MUSIC_STOP = "SET_GAME_MUSIC_STOP";
+export const setGameMusicStop = createAction(SET_GAME_MUSIC_STOP);
+export const SET_GAME_MUSIC_TOGGLE = "SET_GAME_MUSIC_TOGGLE";
+export const setGameMusicToggle = createAction(SET_GAME_MUSIC_TOGGLE);
+
+export const SET_GAME_SCENE_STATUS = "SET_GAME_SCENE_STATUS";
+export const setGameSceneStatus = createAction(SET_GAME_SCENE_STATUS);
+
+
 export function setQuestsData(data) {
   return (dispatch) => {
     dispatch(setQuests(data));
@@ -47,5 +65,36 @@ export function setHeader(data) {
 export function setMediaData(data) {
   return (dispatch) => {
     dispatch(setMedia(data));
+  };
+}
+
+export function setGameStatusPlay() {
+  return (dispatch) => {
+    dispatch(setGamePlay());
+  };
+}
+export function setGameStatusStop() {
+  return (dispatch) => {
+    dispatch(setGameStop());
+  };
+}
+export function setGameMusicStatusPlay() {
+  return (dispatch) => {
+    dispatch(setGameMusicPlay());
+  };
+}
+export function setGameMusicStatusStop() {
+  return (dispatch) => {
+    dispatch(setGameMusicStop());
+  };
+}
+export function setGameMusicStatusToggle() {
+  return (dispatch) => {
+    dispatch(setGameMusicToggle());
+  };
+}
+export function setGameScene() {
+  return (dispatch) => {
+    dispatch(setGameSceneStatus());
   };
 }

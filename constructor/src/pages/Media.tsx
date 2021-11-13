@@ -11,11 +11,12 @@ import LayoutBase from "layouts/Base";
 import { StateMedia } from "models/store";
 import { ReactElement, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setHeaderText, setMedia } from "store/actions";
+import { setGameStop, setHeaderText, setMedia } from "store/actions";
 import "./Media.sass";
 
 const Media = (): ReactElement => {
   const Dispatch = useDispatch();
+  Dispatch(setGameStop());
   const url = window.location.hostname;
   const { media, isLoading } = useSelector(
     (state: { media: StateMedia }) => state.media

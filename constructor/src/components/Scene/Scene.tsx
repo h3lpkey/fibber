@@ -5,7 +5,7 @@ import { TQuest } from "models/quest";
 import { StateQuests, StateScene } from "models/store";
 import { ReactElement, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setQuest } from "store/actions";
+import { setQuest, setScene } from "store/actions";
 import "./Scene.sass";
 
 const Scene = (): ReactElement => {
@@ -35,12 +35,10 @@ const Scene = (): ReactElement => {
         <Button
           onClick={() => {
             API.scene.deleteScene(scene.id).then(() => {
-              API.quest
-                .getQuestById(quest.id)
-                .then((questData: TQuest) => {
-                  Dispatch(setQuest(questData));
-                  message.success(`Remove success`);
-                })
+              API.quest.getQuestById(quest.id).then((questData: TQuest) => {
+                Dispatch(setQuest(questData));
+                message.success(`Remove success`);
+              });
             });
           }}
         >
@@ -94,7 +92,18 @@ const Scene = (): ReactElement => {
             <p className="dialog">{scene.Text}</p>
             <div className="buttons">
               {scene.Buttons.map((button: any) => (
-                <button key={button.Text} className="button">
+                <button
+                  key={button.Text}
+                  className="button"
+                  onClick={() => {
+                    const scene = quest.Scenes.find(
+                      (scene) => scene.id.toString() === button.Scene.id
+                    );
+                    if (scene) {
+                      Dispatch(setScene(scene));
+                    }
+                  }}
+                >
                   {button.Text}
                 </button>
               ))}

@@ -1,0 +1,136 @@
+$bg_blue: #6C94AE
+$bg_yellow: #CFB01A
+$white: #F2F5FF
+.scene
+  position: relative
+  width: 100%
+  height: 100%
+  overflow: hidden
+  display: flex
+  justify-content: center
+  .background
+    position: absolute
+    width: 100%
+    height: 100%
+    img
+      width: 100%
+      height: 100%
+      object-fit: cover
+  .person
+    position: absolute
+    height: 100%
+    left: -20px
+    bottom: -130px
+    img
+      height: 100%
+
+  .controls-wrap
+    position: absolute
+    display: flex
+    flex-direction: column
+    bottom: 60px
+    margin: 20px
+    width: 85%
+    .name
+      color: #E9F3FF
+      font-weight: 900
+      font-size: 20px
+      margin-bottom: 20px
+      letter-spacing: 2px
+      padding: 20px
+      background-repeat: no-repeat
+      background-size: auto
+      background-image: url("../../assets/images/nameBubble.svg")
+      font-family: 'JetBrains Mono', monospace
+      font-weight: 700
+      text-shadow: 1px 1px 7px #04E2FC
+      background-position-x: left
+      height: 71px
+      width: 220px
+      &-earth
+        text-shadow: 1px 1px 7px #04E2FC
+        color: #E9F3FF
+        line-height: 0
+        font-size: 32px
+      &-reverse
+        margin-left: auto
+    .controls
+      position: relative
+      display: flex
+      flex-direction: column
+      justify-content: space-between
+      background-repeat: no-repeat
+      background-size: cover
+      background-position: center center
+      padding: 20px
+      z-index: 3
+      background-image: url("../../assets/images/dialogBackground.svg")
+      // &::before
+      //   content: ""
+      //   height: 100%
+      //   width: 100%
+      //   position: absolute
+      //   top: -56px
+      //   left: 0
+      //   z-index: 1
+      //   background-repeat: no-repeat
+      //   background-size: contain
+      //   background-position: center center
+      //   background-image: url("../../assets/images/dialogTop.svg")
+      // &::after
+      //   content: ""
+      //   height: 100%
+      //   width: 100%
+      //   position: absolute
+      //   bottom: -50.3px
+      //   left: 0
+      //   z-index: 1
+      //   background-repeat: no-repeat
+      //   background-size: contain
+      //   background-position: center center
+      //   background-image: url("../../assets/images/dialogBottom.svg")
+      &-background-reverse
+        &::before
+          transform: scaleX(-1)
+        &::after
+          transform: scaleX(-1)
+      .dialog
+        font-family: 'Inter', sans-serif
+        position: relative
+        white-space: break-spaces
+        color: #FFF
+        font-weight: 500
+        font-size: 16px
+        margin: 0 20px 20px 20px
+        max-width: 800px
+        max-height: 200px
+        overflow-y: auto
+      .buttons
+        padding: 0 20px
+        display: flex
+        flex-direction: column
+        .button
+          position: relative
+          background-image: url("../../assets/images/button.svg")
+          background-color: transparent
+          background-repeat: no-repeat
+          background-size: cover
+          border: none
+          font-family: 'Inter', sans-serif
+          font-weight: 600
+          padding: 8px 15px
+          letter-spacing: 0.75px
+          color: #FBF8FF
+          font-size: 18px
+          letter-spacing: 0.75px
+          cursor: pointer
+          margin-bottom: 15px
+          transition: 0.3s
+          text-align: left
+.config-buttons
+  position: absolute
+  top: 10px
+  z-index: 3
+.scene-form
+  position: relative
+  padding: 50px 20px

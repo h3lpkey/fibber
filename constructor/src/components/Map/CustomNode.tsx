@@ -1,18 +1,16 @@
 import EyeInvisibleOutlined from "@ant-design/icons/lib/icons/EyeInvisibleOutlined";
 import EyeOutlined from "@ant-design/icons/lib/icons/EyeOutlined";
-import { Card, message } from "antd";
+import { Card, message, Tooltip } from "antd";
 import API from "api";
 import SceneForm from "components/SceneForm/SceneForm";
 import { TQuest } from "models/quest";
 import { TScene } from "models/scene";
-import { StateQuests, StateScene } from "models/store";
+import { StateGame, StateQuests, StateScene } from "models/store";
 import { memo, useState } from "react";
-import { Handle } from "react-flow-renderer";
+import { Handle, Position } from "react-flow-renderer";
 import { useDispatch, useSelector } from "react-redux";
 import { setQuest, setScene } from "store/actions";
 import "./CustomNode.sass";
-
-let initialValues;
 
 export default memo(
   ({
@@ -29,41 +27,7 @@ export default memo(
       (state: { quest: StateQuests }) => state.quest
     );
     const { scene } = useSelector((state: { scene: StateScene }) => state);
-
-    if (data.property) {
-      initialValues = {
-        ToSceneId: data.property.ToSceneId,
-        Notification: data.property.Notification,
-        PersonPositionLeft: data.property.PersonPositionLeft,
-        PersonName: data.property.PersonName,
-        Text: data.property.Text,
-        Background: data.property.Background ? data.property.Background.id : "",
-        Person: data.property.Person ? data.property.Person.id : "",
-        Music: data.property.Music ? data.property.Music.id : "",
-        Buttons: data.property.Buttons.map((button) => {
-          return {
-            Text: button.Text,
-            Scene: button.Scene?.id,
-            GlobalTriggerNameSetter: button.GlobalTriggerNameSetter,
-            GlobalTriggerNameGetter: button.GlobalTriggerNameGetter
-              ? button.GlobalTriggerNameGetter.split(" ")
-              : "",
-          };
-        }),
-      };
-    } else {
-      initialValues = {
-        ToSceneId: "",
-        Notification: "",
-        PersonPositionLeft: false,
-        PersonName: "",
-        Text: "",
-        Background: "",
-        Person: "",
-        Music: "",
-        Buttons: [],
-      };
-    }
+    const { game } = useSelector((state: { game: StateGame }) => state);
 
     const buttonLinked = (params: any) => {
       const sceneButton = quest.Scenes.find((scene) => {
@@ -95,14 +59,14 @@ export default memo(
           <>
             <Handle
               type="target"
-              position="top"
+              position={Position.Top}
               style={{ background: "#555", width: 30, height: 30, top: -15 }}
               isConnectable={isConnectable}
             />
-            {data.property.ToSceneId && (
+            {data.property.ToScenes && (
               <Handle
                 type="source"
-                position="bottom"
+                position={Position.Bottom}
                 id="a"
                 style={{
                   left: 0,
@@ -118,7 +82,7 @@ export default memo(
               return (
                 <Handle
                   type="source"
-                  position="bottom"
+                  position={Position.Bottom}
                   id={index.toString()}
                   key={index.toString()}
                   onConnect={(params) => buttonLinked(params)}
@@ -131,7 +95,11 @@ export default memo(
                   }}
                   isConnectable={isConnectable}
                 >
-                  {Button.Text}
+                  <Tooltip title={Button.Text}>
+                    <div className="btn-tooltip">
+                      {Button.Text.substr(0, 7)}
+                    </div>
+                  </Tooltip>
                 </Handle>
               );
             })}
@@ -141,7 +109,7 @@ export default memo(
         return (
           <Handle
             type="target"
-            position="top"
+            position={Position.Top}
             style={{ background: "#555", width: 30, height: 30, top: -15 }}
             isConnectable={isConnectable}
           />
@@ -152,9 +120,9 @@ export default memo(
     return (
       <Card
         className="map-card"
-        title={initialValues.Text}
+        title={data.property.Text}
         extra={
-          showStatus ? (
+          game.status === "stop" && showStatus ? (
             <EyeOutlined onClick={() => setShowStatus(!showStatus)} />
           ) : (
             <EyeInvisibleOutlined onClick={() => setShowStatus(!showStatus)} />

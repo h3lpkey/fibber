@@ -1,4 +1,5 @@
-import Constructor from "pages/Constructor/Constructor";
+import Constructor from "pages/Constructor";
+import Game from "pages/Game";
 import Media from "pages/Media";
 import Quests from "pages/Quests";
 import { FC, ReactElement } from "react";
@@ -18,7 +19,7 @@ const Router: FC = (): ReactElement => {
           exact={true}
           component={Constructor}
         />
-        <Route path={[`/game/:questId`]} exact={true} component={Constructor} />
+        <Route path={[`/game/:questId`]} exact={true} component={Game} />
         <Route path={[`/resourses`]} exact={true} component={Media} />
       </Switch>
     </BrowserRouter>

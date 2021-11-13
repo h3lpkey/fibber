@@ -1,4 +1,3 @@
-import { CheckSquareOutlined, CloseSquareOutlined } from "@ant-design/icons";
 import { Card, Space, Spin } from "antd";
 import API from "api/index";
 import LayoutBase from "layouts/Base";
@@ -42,7 +41,7 @@ const Quests = (): ReactElement => {
           {quests.map((Quest) => {
             return (
               <Card
-                key={Quest.id}
+                key={`${Quest.id} ${Quest.Name}`}
                 title={Quest.Name}
                 extra={
                   <Space>
@@ -53,14 +52,6 @@ const Quests = (): ReactElement => {
                 className="quest"
               >
                 <p>Сцен: {Quest.Scenes.length}</p>
-                <p>
-                  Глобальные стили:
-                  {Quest.DefaultStyles ? (
-                    <CheckSquareOutlined />
-                  ) : (
-                    <CloseSquareOutlined />
-                  )}
-                </p>
                 <p>Дата создания: {Quest.created_at}</p>
                 <p>Дата обновления: {Quest.updated_at}</p>
                 <p>Дата публикации: {Quest.published_at}</p>

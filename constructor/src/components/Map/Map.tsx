@@ -9,6 +9,7 @@ import { StateQuests, StateScene } from "models/store";
 import { ReactElement, useCallback, useEffect, useState } from "react";
 import ReactFlow, {
   Background,
+  BackgroundVariant,
   Connection,
   ControlButton,
   Controls,
@@ -16,6 +17,7 @@ import ReactFlow, {
   isNode,
   MiniMap,
   Node,
+  Position,
 } from "react-flow-renderer";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
@@ -76,10 +78,7 @@ const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));
 
 const nodeWidth = 400;
-const nodeHeight = 500;
-
-let id = 0;
-const getId = () => `dndnode_${id++}`;
+const nodeHeight = 200;
 
 const Map = (): ReactElement => {
   let params: { questId: string } = useParams();
@@ -113,11 +112,13 @@ const Map = (): ReactElement => {
         },
       });
 
-      if (sceneObj.ToSceneId) {
-        edges.push({
-          id: `${sceneObj.id.toString()}-${sceneObj.ToSceneId.toString()}-${Math.random()}`,
-          source: `${sceneObj.id.toString()}`,
-          target: `${sceneObj.ToSceneId.toString()}`,
+      if (sceneObj.ToScenes) {
+        sceneObj.ToScenes.forEach((ToSceneLocal) => {
+          edges.push({
+            id: `${sceneObj.id.toString()}-${ToSceneLocal.ToScene.id.toString()}-${Math.random()}`,
+            source: `${sceneObj.id.toString()}`,
+            target: `${ToSceneLocal.ToScene.id.toString()}`,
+          });
         });
       }
 
@@ -127,11 +128,6 @@ const Map = (): ReactElement => {
             id: `${sceneObj.id.toString()}-${button.Scene.id.toString()}-${Math.random()}`,
             source: `${sceneObj.id.toString()}`,
             sourceHandle: `${index}`,
-            label: `${button.Text}`,
-            labelStyle: {
-              fontWeight: 700,
-              fontSize: `30`,
-            },
             target: button.Scene.id.toString(),
           });
         }
@@ -197,8 +193,8 @@ const Map = (): ReactElement => {
     return elements.map((el: Node<any> | Connection | Edge<any>) => {
       if (isNode(el)) {
         const nodeWithPosition = dagreGraph.node(el.id);
-        el.targetPosition = isHorizontal ? "left" : "top";
-        el.sourcePosition = isHorizontal ? "right" : "bottom";
+        el.targetPosition = isHorizontal ? Position.Left : Position.Top;
+        el.sourcePosition = isHorizontal ? Position.Right : Position.Bottom;
         el.position = {
           x: nodeWithPosition.x - nodeWidth / 2 + Math.random() / 1000,
           y: nodeWithPosition.y - nodeHeight / 2,
@@ -218,7 +214,7 @@ const Map = (): ReactElement => {
     [elements]
   );
 
-  const onClickElement = (event: any, element: any) => {
+  const onClickNode = (event: any, element: any) => {
     const scene = quest.Scenes.find(
       (scene) => scene.id.toString() === element.id
     );
@@ -244,7 +240,7 @@ const Map = (): ReactElement => {
           Scenes: scenes,
         };
         Dispatch(setQuest(newQuest));
-        // setQuestMap(questDataToMap(newQuest));
+        setQuestMap(questDataToMap(newQuest));
       });
   };
 
@@ -261,7 +257,7 @@ const Map = (): ReactElement => {
       <>
         <ReactFlow
           elements={questMap}
-          onElementClick={onClickElement}
+          onElementClick={onClickNode}
           nodeTypes={nodeTypes}
         >
           <MiniMap
@@ -279,7 +275,12 @@ const Map = (): ReactElement => {
             }}
             nodeStrokeWidth={3}
           />
-          <Background variant="dots" gap={16} size={1} color="#c3b9f1" />
+          <Background
+            variant={BackgroundVariant.Dots}
+            gap={16}
+            size={1}
+            color="#c3b9f1"
+          />
           <Controls>
             <ControlButton onClick={() => addNode()}>
               <PlusSquareOutlined />
