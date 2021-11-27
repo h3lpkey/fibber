@@ -27,6 +27,10 @@ export const SET_GAME_MUSIC_STOP = "SET_GAME_MUSIC_STOP";
 export const setGameMusicStop = createAction(SET_GAME_MUSIC_STOP);
 export const SET_GAME_MUSIC_TOGGLE = "SET_GAME_MUSIC_TOGGLE";
 export const setGameMusicToggle = createAction(SET_GAME_MUSIC_TOGGLE);
+export const ADD_GAME_TRIGGER = "ADD_GAME_TRIGGER";
+export const addGameTrigger = createAction(ADD_GAME_TRIGGER);
+export const CLEAR_GAME_TRIGGERS = "CLEAR_GAME_TRIGGERS";
+export const clearGameTriggers = createAction(CLEAR_GAME_TRIGGERS);
 
 export const SET_GAME_SCENE_STATUS = "SET_GAME_SCENE_STATUS";
 export const setGameSceneStatus = createAction(SET_GAME_SCENE_STATUS);
@@ -91,6 +95,16 @@ export function setGameMusicStatusStop() {
 export function setGameMusicStatusToggle() {
   return (dispatch) => {
     dispatch(setGameMusicToggle());
+  };
+}
+export function doAddGameTrigger() {
+  return (dispatch) => {
+    dispatch(addGameTrigger());
+  };
+}
+export function doClearGameTrigger() {
+  return (dispatch) => {
+    dispatch(clearGameTriggers());
   };
 }
 export function setGameScene() {

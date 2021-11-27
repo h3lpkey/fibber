@@ -1,5 +1,7 @@
 import { StateGame } from "models/store";
 import {
+  ADD_GAME_TRIGGER,
+  CLEAR_GAME_TRIGGERS,
   SET_GAME_MUSIC_TOGGLE,
   SET_GAME_PLAY,
   SET_GAME_STOP,
@@ -33,6 +35,16 @@ export const game = (
       return {
         ...state,
         music: state.music === "pause" ? "play" : "pause",
+      };
+    case ADD_GAME_TRIGGER:
+      return {
+        ...state,
+        collectedTriggers: state.collectedTriggers.concat(action.payload),
+      };
+    case CLEAR_GAME_TRIGGERS:
+      return {
+        ...state,
+        collectedTriggers: [],
       };
     default:
       return state;

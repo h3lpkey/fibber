@@ -32,18 +32,6 @@ const Scene = (): ReactElement => {
         ) : (
           <Button onClick={() => setEditMode(true)}>Edit</Button>
         )}
-        <Button
-          onClick={() => {
-            API.scene.deleteScene(scene.id).then(() => {
-              API.quest.getQuestById(quest.id).then((questData: TQuest) => {
-                Dispatch(setQuest(questData));
-                message.success(`Remove success`);
-              });
-            });
-          }}
-        >
-          Remove Scene
-        </Button>
       </Space>
     );
   };

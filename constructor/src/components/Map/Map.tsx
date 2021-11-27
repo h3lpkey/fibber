@@ -114,11 +114,13 @@ const Map = (): ReactElement => {
 
       if (sceneObj.ToScenes) {
         sceneObj.ToScenes.forEach((ToSceneLocal) => {
-          edges.push({
-            id: `${sceneObj.id.toString()}-${ToSceneLocal.ToScene.id.toString()}-${Math.random()}`,
-            source: `${sceneObj.id.toString()}`,
-            target: `${ToSceneLocal.ToScene.id.toString()}`,
-          });
+          if (ToSceneLocal.ToScene && ToSceneLocal.ToScene.id) {
+            edges.push({
+              id: `${sceneObj.id.toString()}-${ToSceneLocal.ToScene.id.toString()}-${Math.random()}`,
+              source: `${sceneObj.id.toString()}`,
+              target: `${ToSceneLocal.ToScene.id.toString()}`,
+            });
+          }
         });
       }
 

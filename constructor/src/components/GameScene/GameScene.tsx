@@ -1,10 +1,15 @@
-import { Button, Space, Spin } from "antd";
-import { TScene } from "models/scene";
+import { Button, message, Space, Spin } from "antd";
+import { Tbutton, TScene, TToScene } from "models/scene";
 import { StateGame, StateQuests, StateScene } from "models/store";
 import { ReactElement, useEffect, useState } from "react";
 import ReactPlayer from "react-player";
 import { useDispatch, useSelector } from "react-redux";
-import { setGameMusicToggle, setScene } from "store/actions";
+import {
+  addGameTrigger,
+  setGameMusicToggle,
+  setScene,
+  setSceneData,
+} from "store/actions";
 import "./GameScene.sass";
 
 const GameScene = (): ReactElement => {
@@ -55,12 +60,27 @@ const GameScene = (): ReactElement => {
     );
   };
 
-  const nextScene = (scene: TScene) => {
-    Dispatch(setScene(scene));
+  const nextScenByToScene = (toScene: TToScene) => {};
+  const nextScenByButton = (button: Tbutton) => {};
+
+  const nextSceneById = (id: number) => {
+    const sceneFind = quest.Scenes.find((scene) => scene.id === id);
+    if (sceneFind) {
+      console.log("set scene", sceneFind);
+      Dispatch(setScene(sceneFind));
+    }
   };
 
   return (
-    <div className="scene">
+    <div
+      className="scene"
+      onClick={() => {
+        currentScene.ToScenes.forEach((toSceneLocal) => {
+          nextScenByToScene(toSceneLocal);
+          console.log("toSceneLocal", toSceneLocal);
+        });
+      }}
+    >
       <Menu />
       <MusicPlayer />
       {currentScene.Background && (
@@ -102,16 +122,15 @@ const GameScene = (): ReactElement => {
         >
           <p className="dialog">{currentScene.Text}</p>
           <div className="buttons">
-            {currentScene.Buttons.map((button: any) => (
+            {currentScene.Buttons?.map((button) => (
               <button
                 key={button.Text}
                 className="button"
                 onClick={() => {
-                  const scene = quest.Scenes.find(
-                    (scene) => scene.id === button.Scene.id
-                  );
-                  if (scene) {
-                    nextScene(scene);
+                  if (button.Scene) {
+                    nextSceneById(button.Scene.id);
+                  } else {
+                    message.error("No set scene :(");
                   }
                 }}
               >

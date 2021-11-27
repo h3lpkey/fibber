@@ -1,23 +1,20 @@
 {
-  "collectionName": "components_button_buttons",
+  "collectionName": "components_to_scene_to_scenes",
   "info": {
-    "name": "button",
-    "icon": "archway",
+    "name": "ToScene",
+    "icon": "code-branch",
     "description": ""
   },
   "options": {},
   "attributes": {
-    "Text": {
-      "type": "string"
-    },
-    "Scene": {
-      "model": "scene"
-    },
     "TriggerSetter": {
       "type": "string"
     },
     "TriggerGetter": {
       "type": "string"
+    },
+    "ToScene": {
+      "model": "scene"
     }
   }
 }

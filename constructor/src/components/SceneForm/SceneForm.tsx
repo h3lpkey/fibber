@@ -79,6 +79,7 @@ export default memo(({ data }: { data: TScene }) => {
   };
 
   const sceneModify = (changedValues: any, allValues: any) => {
+    console.log("changedValues", changedValues);
     if (changedValues.Buttons) {
       allValues.Buttons.forEach((button: any, index: number) => {
         // Backend store info like string, Frontend work with array of strings
@@ -89,16 +90,16 @@ export default memo(({ data }: { data: TScene }) => {
       });
       changedValues.Buttons = allValues.Buttons;
     }
-    // if (changedValues.ToScene) {
-    //   allValues.ToScene.forEach((scene: any, index: number) => {
-    //     // Backend store info like string, Frontend work with array of strings
-    //     if (scene && Array.isArray(scene.TriggerGetter)) {
-    //       allValues.ToScene[index].TriggerGetter =
-    //         scene.TriggerGetter.join(" ");
-    //     }
-    //   });
-    //   changedValues.ToScene = allValues.ToScene;
-    // }
+    if (changedValues.ToScenes) {
+      allValues.ToScenes.forEach((sceneLocal: any, index: number) => {
+        // Backend store info like string, Frontend work with array of strings
+        if (sceneLocal && Array.isArray(sceneLocal.TriggerGetter)) {
+          allValues.ToScenes[index].TriggerGetter =
+            sceneLocal.TriggerGetter.join(" ");
+        }
+      });
+      changedValues.ToScenes = allValues.ToScenes;
+    }
     API.scene.updateScene(scene.id, changedValues).then(() => {
       API.quest.getQuestById(quest.id).then((questData: TQuest) => {
         Dispatch(setQuest(questData));
@@ -189,7 +190,7 @@ export default memo(({ data }: { data: TScene }) => {
               file.mime === "image/gif"
             ) {
               return (
-                <Option id={file.id} value={file.id}>
+                <Option id={file.id} key={file.id} value={file.id}>
                   {file.name}
                 </Option>
               );

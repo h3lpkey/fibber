@@ -78,30 +78,32 @@ export default memo(
                 isConnectable={isConnectable}
               />
             )}
-            {data.property.Buttons.map((Button, index) => {
-              return (
-                <Handle
-                  type="source"
-                  position={Position.Bottom}
-                  id={index.toString()}
-                  key={index.toString()}
-                  onConnect={(params) => buttonLinked(params)}
-                  style={{
-                    left: index * 100 + 100,
-                    background: "#555",
-                    width: 30,
-                    height: 30,
-                    bottom: -15,
-                  }}
-                  isConnectable={isConnectable}
-                >
-                  <Tooltip title={Button.Text}>
-                    <div className="btn-tooltip">
-                      {Button.Text.substr(0, 7)}
-                    </div>
-                  </Tooltip>
-                </Handle>
-              );
+            {data.property.Buttons?.map((Button, index) => {
+              if (Button.Text) {
+                return (
+                  <Handle
+                    type="source"
+                    position={Position.Bottom}
+                    id={index.toString()}
+                    key={index.toString()}
+                    onConnect={(params) => buttonLinked(params)}
+                    style={{
+                      left: index * 100 + 100,
+                      background: "#555",
+                      width: 30,
+                      height: 30,
+                      bottom: -15,
+                    }}
+                    isConnectable={isConnectable}
+                  >
+                    <Tooltip title={Button.Text}>
+                      <div className="btn-tooltip">
+                        {Button.Text.substr(0, 7)}
+                      </div>
+                    </Tooltip>
+                  </Handle>
+                );
+              }
             })}
           </>
         );
