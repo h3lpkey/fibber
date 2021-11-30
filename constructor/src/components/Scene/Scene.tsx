@@ -38,7 +38,7 @@ const Scene = (): ReactElement => {
 
   if (editMode) {
     return (
-      <div className="scene-form">
+      <div>
         <ModeSwitcher />
         <SceneForm data={scene} />
       </div>

@@ -60,8 +60,63 @@ const GameScene = (): ReactElement => {
     );
   };
 
-  const nextScenByToScene = (toScene: TToScene) => {};
-  const nextScenByButton = (button: Tbutton) => {};
+  const nextScenByToScene = (toScenes: TToScene[]) => {
+    // const triggers = game.collectedTriggers;
+    // console.log("triggers", triggers);
+    const localToScenes: {
+      TriggerSetter: string;
+      TriggerGetter: string;
+      ToScene: TScene;
+    }[] = [];
+    console.log("toScenes", toScenes);
+    if (toScenes.length > 0) {
+      toScenes.forEach((scene) => {
+        console.log("scne", scene);
+        if (scene.TriggerGetter) {
+          const triggers = scene.TriggerGetter.split(" ");
+          const displayToScene = triggers.reduce((prev, trigger) => {
+            if (prev) {
+              return game.collectedTriggers.includes(trigger);
+            }
+            return false;
+          }, true);
+          if (displayToScene) {
+            localToScenes.push(scene);
+          }
+        } else {
+          localToScenes.push(scene);
+        }
+      });
+      console.log("localToScenes", localToScenes);
+
+      if (localToScenes.length > 1) {
+        let localToScene = localToScenes[0];
+
+        localToScenes.forEach((scene) => {
+          if (localToScene.TriggerGetter.length && scene.TriggerGetter) {
+            const currentSceneWeight =
+              localToScene.TriggerGetter.split(" ").length;
+            const localWeight = scene.TriggerGetter.split(" ").length;
+            console.log(currentSceneWeight);
+            console.log(localWeight);
+            if (currentSceneWeight < localWeight) {
+              localToScene = scene;
+            }
+          }
+        });
+        console.log(localToScene);
+        if (localToScene.TriggerSetter) {
+          Dispatch(addGameTrigger(localToScene.TriggerSetter));
+        }
+        nextSceneById(localToScene.ToScene.id);
+      } else {
+        if (localToScenes[0].TriggerSetter) {
+          Dispatch(addGameTrigger(localToScenes[0].TriggerSetter));
+        }
+        nextSceneById(localToScenes[0].ToScene.id);
+      }
+    }
+  };
 
   const nextSceneById = (id: number) => {
     const sceneFind = quest.Scenes.find((scene) => scene.id === id);
@@ -75,10 +130,7 @@ const GameScene = (): ReactElement => {
     <div
       className="scene"
       onClick={() => {
-        currentScene.ToScenes.forEach((toSceneLocal) => {
-          nextScenByToScene(toSceneLocal);
-          console.log("toSceneLocal", toSceneLocal);
-        });
+        nextScenByToScene(currentScene.ToScenes);
       }}
     >
       <Menu />
@@ -122,21 +174,56 @@ const GameScene = (): ReactElement => {
         >
           <p className="dialog">{currentScene.Text}</p>
           <div className="buttons">
-            {currentScene.Buttons?.map((button) => (
-              <button
-                key={button.Text}
-                className="button"
-                onClick={() => {
-                  if (button.Scene) {
-                    nextSceneById(button.Scene.id);
-                  } else {
-                    message.error("No set scene :(");
+            {currentScene.Buttons?.map((button) => {
+              if (button.TriggerGetter) {
+                const triggers = button.TriggerGetter.split(" ");
+                const displayButton = triggers.reduce((prev, trigger) => {
+                  if (prev) {
+                    return game.collectedTriggers.includes(trigger);
                   }
-                }}
-              >
-                {button.Text}
-              </button>
-            ))}
+                  return false;
+                }, true);
+                if (displayButton) {
+                  return (
+                    <button
+                      key={button.Text}
+                      className="button"
+                      onClick={() => {
+                        if (button.TriggerSetter) {
+                          Dispatch(addGameTrigger(button.TriggerSetter));
+                        }
+                        if (button.Scene) {
+                          nextSceneById(button.Scene.id);
+                        } else {
+                          message.error("No set scene :(");
+                        }
+                      }}
+                    >
+                      {button.Text}
+                    </button>
+                  );
+                }
+              } else {
+                return (
+                  <button
+                    key={button.Text}
+                    className="button"
+                    onClick={() => {
+                      if (button.TriggerSetter) {
+                        Dispatch(addGameTrigger(button.TriggerSetter));
+                      }
+                      if (button.Scene) {
+                        nextSceneById(button.Scene.id);
+                      } else {
+                        message.error("No set scene :(");
+                      }
+                    }}
+                  >
+                    {button.Text}
+                  </button>
+                );
+              }
+            })}
           </div>
         </div>
       </div>

@@ -31,6 +31,8 @@ export const ADD_GAME_TRIGGER = "ADD_GAME_TRIGGER";
 export const addGameTrigger = createAction(ADD_GAME_TRIGGER);
 export const CLEAR_GAME_TRIGGERS = "CLEAR_GAME_TRIGGERS";
 export const clearGameTriggers = createAction(CLEAR_GAME_TRIGGERS);
+export const REMOVE_GAME_TRIGGER = "REMOVE_GAME_TRIGGER";
+export const removeGameTrigger = createAction(REMOVE_GAME_TRIGGER);
 
 export const SET_GAME_SCENE_STATUS = "SET_GAME_SCENE_STATUS";
 export const setGameSceneStatus = createAction(SET_GAME_SCENE_STATUS);
@@ -105,6 +107,11 @@ export function doAddGameTrigger() {
 export function doClearGameTrigger() {
   return (dispatch) => {
     dispatch(clearGameTriggers());
+  };
+}
+export function doRemoveGameTrigger() {
+  return (dispatch) => {
+    dispatch(removeGameTrigger());
   };
 }
 export function setGameScene() {

@@ -2,6 +2,7 @@ import { StateGame } from "models/store";
 import {
   ADD_GAME_TRIGGER,
   CLEAR_GAME_TRIGGERS,
+  REMOVE_GAME_TRIGGER,
   SET_GAME_MUSIC_TOGGLE,
   SET_GAME_PLAY,
   SET_GAME_STOP,
@@ -45,6 +46,23 @@ export const game = (
       return {
         ...state,
         collectedTriggers: [],
+      };
+    case REMOVE_GAME_TRIGGER:
+      const triggers = state.collectedTriggers.splice(
+        state.collectedTriggers.findIndex(
+          (trigger) => trigger === action.payload
+        ) - 1,
+        1
+      );
+      console.log("triggers", triggers);
+      return {
+        ...state,
+        collectedTriggers: state.collectedTriggers.splice(
+          state.collectedTriggers.findIndex(
+            (trigger) => trigger === action.payload
+          ) - 1,
+          1
+        ),
       };
     default:
       return state;
