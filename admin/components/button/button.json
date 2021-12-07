@@ -18,6 +18,9 @@
     },
     "TriggerGetter": {
       "type": "string"
+    },
+    "TriggerDelete": {
+      "type": "string"
     }
   }
 }

@@ -49,6 +49,7 @@ export type Tbutton = {
   Scene: TScene;
   TriggerSetter: string;
   TriggerGetter: string;
+  TriggerDelete: string;
 };
 
 export type TMusic = {
@@ -84,6 +85,7 @@ export type TPerson = {
 export type TToScene = {
   TriggerSetter: string;
   TriggerGetter: string;
+  TriggerDelete: string;
   ToScene: TScene;
 };
 

@@ -15,6 +15,9 @@
     },
     "ToScene": {
       "model": "scene"
+    },
+    "TriggerDelete": {
+      "type": "string"
     }
   }
 }

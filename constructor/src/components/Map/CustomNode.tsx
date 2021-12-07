@@ -1,11 +1,12 @@
 import EyeInvisibleOutlined from "@ant-design/icons/lib/icons/EyeInvisibleOutlined";
 import EyeOutlined from "@ant-design/icons/lib/icons/EyeOutlined";
-import { Card, message, Tooltip } from "antd";
+import { Card, message, Tag, Tooltip } from "antd";
 import API from "api";
+import Scene from "components/Scene/Scene";
 import SceneForm from "components/SceneForm/SceneForm";
 import { TQuest } from "models/quest";
 import { TScene } from "models/scene";
-import { StateGame, StateQuests, StateScene } from "models/store";
+import { StateGame, StateQuests, StateScene, StateUI } from "models/store";
 import { memo, useState } from "react";
 import { Handle, Position } from "react-flow-renderer";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,6 +29,7 @@ export default memo(
     );
     const { scene } = useSelector((state: { scene: StateScene }) => state);
     const { game } = useSelector((state: { game: StateGame }) => state);
+    const { ui } = useSelector((state: { ui: StateUI }) => state);
 
     const buttonLinked = (params: any) => {
       const sceneButton = quest.Scenes.find((scene) => {
@@ -76,7 +78,12 @@ export default memo(
                   bottom: -15,
                 }}
                 isConnectable={isConnectable}
-              />
+              >
+                {ui.showTooltips &&
+                  data.property.ToScenes.map((toScene) => {
+                    return <Tag color="#b557d4">{toScene.TriggerGetter}</Tag>;
+                  })}
+              </Handle>
             )}
             {data.property.Buttons?.map((Button, index) => {
               if (Button.Text) {
@@ -96,11 +103,23 @@ export default memo(
                     }}
                     isConnectable={isConnectable}
                   >
-                    <Tooltip title={Button.Text}>
-                      <div className="btn-tooltip">
-                        {Button.Text.substr(0, 7)}
-                      </div>
-                    </Tooltip>
+                    {ui.showTooltips && (
+                      <Tooltip title={Button.Text}>
+                        <div className="btn-tooltip">
+                          {Button.TriggerGetter && (
+                            <Tag color="#b557d4">
+                              {Button.TriggerGetter.split(" ")}
+                            </Tag>
+                          )}
+                          {Button.Text.substr(0, 7)}
+                          {Button.TriggerSetter && (
+                            <Tag color="#6a57d4">
+                              {Button.TriggerSetter.split(" ")}
+                            </Tag>
+                          )}
+                        </div>
+                      </Tooltip>
+                    )}
                   </Handle>
                 );
               }
@@ -131,7 +150,7 @@ export default memo(
           )
         }
       >
-        {showStatus && <SceneForm data={scene} />}
+        {showStatus && <SceneForm />}
         <Handles />
       </Card>
     );

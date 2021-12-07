@@ -48,20 +48,10 @@ export const game = (
         collectedTriggers: [],
       };
     case REMOVE_GAME_TRIGGER:
-      const triggers = state.collectedTriggers.splice(
-        state.collectedTriggers.findIndex(
-          (trigger) => trigger === action.payload
-        ) - 1,
-        1
-      );
-      console.log("triggers", triggers);
       return {
         ...state,
-        collectedTriggers: state.collectedTriggers.splice(
-          state.collectedTriggers.findIndex(
-            (trigger) => trigger === action.payload
-          ) - 1,
-          1
+        collectedTriggers: state.collectedTriggers.filter(
+          (trigger) => trigger !== action.payload
         ),
       };
     default:

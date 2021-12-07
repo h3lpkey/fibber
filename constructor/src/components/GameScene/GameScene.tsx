@@ -6,6 +6,7 @@ import ReactPlayer from "react-player";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addGameTrigger,
+  removeGameTrigger,
   setGameMusicToggle,
   setScene,
   setSceneData,
@@ -60,18 +61,16 @@ const GameScene = (): ReactElement => {
     );
   };
 
+  const removeTriggers = (triggers: string) => {
+    triggers.split(" ").forEach((trigger: string) => {
+      Dispatch(removeGameTrigger(trigger));
+    });
+  };
+
   const nextScenByToScene = (toScenes: TToScene[]) => {
-    // const triggers = game.collectedTriggers;
-    // console.log("triggers", triggers);
-    const localToScenes: {
-      TriggerSetter: string;
-      TriggerGetter: string;
-      ToScene: TScene;
-    }[] = [];
-    console.log("toScenes", toScenes);
+    const localToScenes: TToScene[] = [];
     if (toScenes.length > 0) {
       toScenes.forEach((scene) => {
-        console.log("scne", scene);
         if (scene.TriggerGetter) {
           const triggers = scene.TriggerGetter.split(" ");
           const displayToScene = triggers.reduce((prev, trigger) => {
@@ -87,7 +86,6 @@ const GameScene = (): ReactElement => {
           localToScenes.push(scene);
         }
       });
-      console.log("localToScenes", localToScenes);
 
       if (localToScenes.length > 1) {
         let localToScene = localToScenes[0];
@@ -97,21 +95,24 @@ const GameScene = (): ReactElement => {
             const currentSceneWeight =
               localToScene.TriggerGetter.split(" ").length;
             const localWeight = scene.TriggerGetter.split(" ").length;
-            console.log(currentSceneWeight);
-            console.log(localWeight);
             if (currentSceneWeight < localWeight) {
               localToScene = scene;
             }
           }
         });
-        console.log(localToScene);
         if (localToScene.TriggerSetter) {
           Dispatch(addGameTrigger(localToScene.TriggerSetter));
+        }
+        if (localToScene.TriggerDelete) {
+          removeTriggers(localToScene.TriggerSetter);
         }
         nextSceneById(localToScene.ToScene.id);
       } else {
         if (localToScenes[0].TriggerSetter) {
           Dispatch(addGameTrigger(localToScenes[0].TriggerSetter));
+        }
+        if (localToScenes[0].TriggerDelete) {
+          removeTriggers(localToScenes[0].TriggerSetter);
         }
         nextSceneById(localToScenes[0].ToScene.id);
       }
@@ -121,7 +122,6 @@ const GameScene = (): ReactElement => {
   const nextSceneById = (id: number) => {
     const sceneFind = quest.Scenes.find((scene) => scene.id === id);
     if (sceneFind) {
-      console.log("set scene", sceneFind);
       Dispatch(setScene(sceneFind));
     }
   };
@@ -192,6 +192,9 @@ const GameScene = (): ReactElement => {
                         if (button.TriggerSetter) {
                           Dispatch(addGameTrigger(button.TriggerSetter));
                         }
+                        if (button.TriggerDelete) {
+                          removeTriggers(button.TriggerDelete);
+                        }
                         if (button.Scene) {
                           nextSceneById(button.Scene.id);
                         } else {
@@ -211,6 +214,9 @@ const GameScene = (): ReactElement => {
                     onClick={() => {
                       if (button.TriggerSetter) {
                         Dispatch(addGameTrigger(button.TriggerSetter));
+                      }
+                      if (button.TriggerDelete) {
+                        removeTriggers(button.TriggerDelete);
                       }
                       if (button.Scene) {
                         nextSceneById(button.Scene.id);

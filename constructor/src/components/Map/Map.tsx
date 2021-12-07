@@ -1,11 +1,11 @@
-import { PlusSquareOutlined } from "@ant-design/icons";
+import { PlusSquareOutlined, ToolOutlined } from "@ant-design/icons";
 import { Space, Spin } from "antd";
 import API from "api/index";
 import CSS from "csstype";
 import dagre from "dagre";
 import { TQuest } from "models/quest";
 import { TScene } from "models/scene";
-import { StateQuests, StateScene } from "models/store";
+import { StateQuests, StateScene, StateUI } from "models/store";
 import { ReactElement, useCallback, useEffect, useState } from "react";
 import ReactFlow, {
   Background,
@@ -21,7 +21,7 @@ import ReactFlow, {
 } from "react-flow-renderer";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
-import { setMedia, setQuest, setScene } from "store/actions";
+import { setMedia, setQuest, setScene, setUIShowTooltips } from "store/actions";
 import CustomNode from "./CustomNode";
 
 interface TMapNode {
@@ -88,6 +88,7 @@ const Map = (): ReactElement => {
   const [sceneId, setSceneId] = useState<number>(0);
   const { quest } = useSelector((state: { quest: StateQuests }) => state.quest);
   const { scene } = useSelector((state: { scene: StateScene }) => state);
+  const { ui } = useSelector((state: { ui: StateUI }) => state);
   const nodeTypes = {
     selectorNode: CustomNode,
   };
@@ -167,8 +168,11 @@ const Map = (): ReactElement => {
   useEffect(() => {
     setQuestMap((els: any) =>
       els.map((el: any) => {
-        if (el.id === sceneId.toString()) {
-          el.style = { ...el.style, backgroundColor: `#e1ccf5` };
+        if (el.id === scene.id.toString()) {
+          el.style = {
+            ...el.style,
+            border: "3px solid #8b73fa",
+          };
         } else {
           el.style = { ...el.style };
         }
@@ -176,7 +180,7 @@ const Map = (): ReactElement => {
         return el;
       })
     );
-  }, [sceneId, setQuestMap, setSceneId]);
+  }, [sceneId, setQuestMap, setSceneId, scene]);
 
   const getLayoutedElements = (elements: any, direction = "TB") => {
     const isHorizontal = direction === "LR";
@@ -246,6 +250,10 @@ const Map = (): ReactElement => {
       });
   };
 
+  const toggleTooltips = () => {
+    Dispatch(setUIShowTooltips(!ui.showTooltips));
+  };
+
   if (isLoading) {
     return (
       <Space align="center">
@@ -286,6 +294,9 @@ const Map = (): ReactElement => {
           <Controls>
             <ControlButton onClick={() => addNode()}>
               <PlusSquareOutlined />
+            </ControlButton>
+            <ControlButton onClick={() => toggleTooltips()}>
+              <ToolOutlined />
             </ControlButton>
           </Controls>
         </ReactFlow>

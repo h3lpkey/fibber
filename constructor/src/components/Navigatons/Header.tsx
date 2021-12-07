@@ -13,8 +13,6 @@ const Navbar = (): ReactElement => {
     Dispatch(removeGameTrigger(trigger));
   };
 
-  console.log("game.collectedTriggers", game.collectedTriggers);
-
   const GameInfo = () => {
     return (
       <>

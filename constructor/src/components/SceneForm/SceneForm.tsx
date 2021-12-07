@@ -18,7 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setQuest, setScene } from "store/actions";
 import "./SceneForm.sass";
 
-export default memo(({ data }: { data: TScene }) => {
+const SceneForm = () => {
   const Dispatch = useDispatch();
   const [form] = Form.useForm();
   const [allTrigerGetter, setAllTrigerGetter] = useState<string[]>([]);
@@ -48,15 +48,54 @@ export default memo(({ data }: { data: TScene }) => {
     setAllTrigerGetter(triggers);
   }, []);
 
+  useEffect(() => {
+    form.setFieldsValue({
+      Notification: scene.Notification,
+      PersonPositionLeft: scene.PersonPositionLeft,
+      PersonName: scene.PersonName,
+      Text: scene.Text,
+      Background: scene.Background ? scene.Background.id : "",
+      Person: scene.Person ? scene.Person.id : "",
+      Music: scene.Music ? scene.Music.id : "",
+      ToScenes: scene.ToScenes?.map((toScene) => {
+        if (toScene.ToScene) {
+          return {
+            ToScene: toScene.ToScene.id,
+            TriggerSetter: toScene.TriggerSetter,
+            TriggerGetter: toScene.TriggerGetter
+              ? toScene.TriggerGetter.split(" ")
+              : [],
+            TriggerDelete: toScene.TriggerDelete
+              ? toScene.TriggerDelete.split(" ")
+              : [],
+          };
+        }
+      }),
+      Buttons: scene.Buttons.map((button) => {
+        return {
+          Text: button.Text,
+          Scene: button.Scene?.id,
+          TriggerSetter: button.TriggerSetter,
+          TriggerGetter: button.TriggerGetter
+            ? button.TriggerGetter.split(" ")
+            : [],
+          TriggerDelete: button.TriggerDelete
+            ? button.TriggerDelete.split(" ")
+            : [],
+        };
+      }),
+    });
+  }, [scene]);
+
   const initialValues = {
-    Notification: data.Notification,
-    PersonPositionLeft: data.PersonPositionLeft,
-    PersonName: data.PersonName,
-    Text: data.Text,
-    Background: data.Background ? data.Background.id : "",
-    Person: data.Person ? data.Person.id : "",
-    Music: data.Music ? data.Music.id : "",
-    ToScenes: data.ToScenes?.map((toScene) => {
+    Notification: scene.Notification,
+    PersonPositionLeft: scene.PersonPositionLeft,
+    PersonName: scene.PersonName,
+    Text: scene.Text,
+    Background: scene.Background ? scene.Background.id : "",
+    Person: scene.Person ? scene.Person.id : "",
+    Music: scene.Music ? scene.Music.id : "",
+    ToScenes: scene.ToScenes?.map((toScene) => {
       if (toScene.ToScene) {
         return {
           ToScene: toScene.ToScene.id,
@@ -64,10 +103,13 @@ export default memo(({ data }: { data: TScene }) => {
           TriggerGetter: toScene.TriggerGetter
             ? toScene.TriggerGetter.split(" ")
             : [],
+          TriggerDelete: toScene.TriggerDelete
+            ? toScene.TriggerDelete.split(" ")
+            : [],
         };
       }
     }),
-    Buttons: data.Buttons.map((button) => {
+    Buttons: scene.Buttons.map((button) => {
       return {
         Text: button.Text,
         Scene: button.Scene?.id,
@@ -75,18 +117,24 @@ export default memo(({ data }: { data: TScene }) => {
         TriggerGetter: button.TriggerGetter
           ? button.TriggerGetter.split(" ")
           : [],
+        TriggerDelete: button.TriggerDelete
+          ? button.TriggerDelete.split(" ")
+          : [],
       };
     }),
   };
 
   const sceneModify = (changedValues: any, allValues: any) => {
-    console.log("changedValues", changedValues);
     if (changedValues.Buttons) {
       allValues.Buttons.forEach((button: any, index: number) => {
         // Backend store info like string, Frontend work with array of strings
         if (button && Array.isArray(button.TriggerGetter)) {
           allValues.Buttons[index].TriggerGetter =
             button.TriggerGetter.join(" ");
+        }
+        if (button && Array.isArray(button.TriggerDelete)) {
+          allValues.Buttons[index].TriggerDelete =
+            button.TriggerDelete.join(" ");
         }
       });
       changedValues.Buttons = allValues.Buttons;
@@ -98,9 +146,14 @@ export default memo(({ data }: { data: TScene }) => {
           allValues.ToScenes[index].TriggerGetter =
             sceneLocal.TriggerGetter.join(" ");
         }
+        if (sceneLocal && Array.isArray(sceneLocal.TriggerDelete)) {
+          allValues.ToScenes[index].TriggerDelete =
+            sceneLocal.TriggerDelete.join(" ");
+        }
       });
       changedValues.ToScenes = allValues.ToScenes;
     }
+
     API.scene.updateScene(scene.id, changedValues).then(() => {
       API.quest.getQuestById(quest.id).then((questData: TQuest) => {
         Dispatch(setQuest(questData));
@@ -279,6 +332,24 @@ export default memo(({ data }: { data: TScene }) => {
                           })}
                         </Select>
                       </Form.Item>
+                      <Form.Item
+                        {...restField}
+                        name={[name, "TriggerDelete"]}
+                        label="Trigger Delete"
+                        fieldKey={[fieldKey, "TriggerDelete"]}
+                      >
+                        <Select mode="multiple" allowClear>
+                          {allTrigerGetter.map((trigger) => {
+                            if (trigger) {
+                              return (
+                                <Option value={trigger} key={trigger}>
+                                  {trigger}
+                                </Option>
+                              );
+                            }
+                          })}
+                        </Select>
+                      </Form.Item>
                     </Space>
                     <MinusCircleOutlined onClick={() => remove(name)} />
                   </Space>
@@ -363,6 +434,24 @@ export default memo(({ data }: { data: TScene }) => {
                           })}
                         </Select>
                       </Form.Item>
+                      <Form.Item
+                        {...restField}
+                        name={[name, "TriggerDelete"]}
+                        label="Trigger Delete"
+                        fieldKey={[fieldKey, "TriggerDelete"]}
+                      >
+                        <Select mode="multiple" allowClear>
+                          {allTrigerGetter.map((trigger) => {
+                            if (trigger) {
+                              return (
+                                <Option value={trigger} key={trigger}>
+                                  {trigger}
+                                </Option>
+                              );
+                            }
+                          })}
+                        </Select>
+                      </Form.Item>
                     </Space>
                     <MinusCircleOutlined onClick={() => remove(name)} />
                   </Space>
@@ -384,7 +473,7 @@ export default memo(({ data }: { data: TScene }) => {
       </div>
       <Button
         onClick={() => {
-          API.scene.deleteScene(data.id).then(() => {
+          API.scene.deleteScene(scene.id).then(() => {
             API.quest.getQuestById(quest.id).then((data) => {
               Dispatch(setQuest(data));
             });
@@ -395,4 +484,6 @@ export default memo(({ data }: { data: TScene }) => {
       </Button>
     </Form>
   );
-});
+};
+
+export default SceneForm;

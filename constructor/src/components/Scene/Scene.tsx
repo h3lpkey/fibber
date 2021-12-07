@@ -3,7 +3,7 @@ import API from "api/index";
 import SceneForm from "components/SceneForm/SceneForm";
 import { TQuest } from "models/quest";
 import { StateQuests, StateScene } from "models/store";
-import { ReactElement, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setQuest, setScene } from "store/actions";
 import "./Scene.sass";
@@ -40,7 +40,7 @@ const Scene = (): ReactElement => {
     return (
       <div>
         <ModeSwitcher />
-        <SceneForm data={scene} />
+        <SceneForm />
       </div>
     );
   } else {
