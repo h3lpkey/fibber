@@ -196,7 +196,6 @@ const SceneForm = () => {
       <Form.Item label="Person Image" name="Person">
         <Select
           showSearch
-          allowClear
           placeholder="Select background"
           optionFilterProp="children"
           filterOption={(input, option: any) =>
@@ -208,6 +207,7 @@ const SceneForm = () => {
               .localeCompare(optionB.children.toLowerCase())
           }
         >
+          <Option value={""}>Пусто</Option>
           {media.map((file) => {
             if (file.mime === "image/png" || file.mime === "image/jpeg") {
               return (
@@ -225,7 +225,6 @@ const SceneForm = () => {
       <Form.Item label="Background Image" name="Background">
         <Select
           showSearch
-          allowClear
           placeholder="Select background"
           optionFilterProp="children"
           filterOption={(input, option: any) =>
@@ -237,6 +236,7 @@ const SceneForm = () => {
               .localeCompare(optionB.children.toLowerCase())
           }
         >
+          <Option value={""}>Пусто</Option>
           {media.map((file) => {
             if (
               file.mime === "image/png" ||
