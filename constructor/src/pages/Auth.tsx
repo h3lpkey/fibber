@@ -27,14 +27,7 @@ const Auth = (): ReactElement => {
   return (
     <div className="page page-auth">
       <h1>Fibber login:</h1>
-      <Form
-        name="basic"
-        initialValues={{
-          identifier: "willekb@gmail.com",
-          password: "qWe3@1,>/",
-        }}
-        onFinish={onFinish}
-      >
+      <Form name="basic" onFinish={onFinish}>
         <Form.Item
           label="Username"
           name="identifier"
