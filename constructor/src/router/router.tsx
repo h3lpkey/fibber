@@ -1,3 +1,4 @@
+import Auth from "pages/Auth";
 import Constructor from "pages/Constructor";
 import Game from "pages/Game";
 import Media from "pages/Media";
@@ -9,6 +10,7 @@ const Router: FC = (): ReactElement => {
   return (
     <BrowserRouter>
       <Switch>
+        <Route path="/auth" exact={true} component={Auth} />
         <Route
           path={[`/`, `/quests`, `/deploy`, `/game`]}
           exact={true}
