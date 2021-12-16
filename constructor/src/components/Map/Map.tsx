@@ -85,6 +85,7 @@ const Map = (): ReactElement => {
   const Dispatch = useDispatch();
   const [questMap, setQuestMap] = useState<any>(elements);
   const [isLoading, setLoading] = useState<boolean>(true);
+  const [lastElement, setLastElement] = useState<any>();
   const [sceneId, setSceneId] = useState<number>(0);
   const { quest } = useSelector((state: { quest: StateQuests }) => state.quest);
   const { scene } = useSelector((state: { scene: StateScene }) => state);
@@ -221,6 +222,8 @@ const Map = (): ReactElement => {
   );
 
   const onClickNode = (event: any, element: any) => {
+    console.log("element", element);
+    setLastElement(element);
     const scene = quest.Scenes.find(
       (scene) => scene.id.toString() === element.id
     );
@@ -231,6 +234,8 @@ const Map = (): ReactElement => {
   };
 
   const addNode = () => {
+    console.log("nice");
+    console.log(questMap);
     API.scene
       .createScene({
         Text: "new scene",

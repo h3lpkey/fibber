@@ -145,7 +145,7 @@ const GameScene = (): ReactElement => {
         </div>
       )}
       {currentScene.Person && (
-        <div className="person">
+        <div className={`person ${scene.PersonPositionLeft && "person-left"}`}>
           <img
             src={`http://${url}:1337${currentScene.Person.url}`}
             alt="person"

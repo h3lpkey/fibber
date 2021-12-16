@@ -57,7 +57,9 @@ const Scene = (): ReactElement => {
           </div>
         )}
         {scene.Person && (
-          <div className="person">
+          <div
+            className={`person ${scene.PersonPositionLeft && "person-left"}`}
+          >
             <img src={`http://${url}:1337${scene.Person.url}`} alt="person" />
           </div>
         )}

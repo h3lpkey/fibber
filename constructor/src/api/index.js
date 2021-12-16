@@ -8,8 +8,6 @@ const token = localStorage.getItem("token") || null;
 
 if (token) {
   axios.defaults.headers.authorization = `Bearer ${token}`;
-} else {
-  console.log("Where my token bro?", localStorage.getItem("token"))
 }
 
 const url = window.location.hostname
@@ -28,7 +26,7 @@ export const request = (url, method, data, headers) => {
       .catch((error) => {
         if (error.response.data.statusCode === 403) {
           localStorage.removeItem("token")
-          window.location.replace("http://localhost:3000/auth");
+          window.location.replace(`http://${url}:3000/auth`);
         }
         try {
           reject(error.response.data);

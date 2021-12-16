@@ -15,7 +15,6 @@ const Auth = (): ReactElement => {
   }, []);
 
   const onFinish = (values: { identifier: string; password: string }) => {
-    console.log("Success:", values);
     API.auth.login(values).then((response) => {
       localStorage.setItem("token", response.jwt);
       axios.defaults.headers.authorization = `Bearer ${response.jwt}`;
