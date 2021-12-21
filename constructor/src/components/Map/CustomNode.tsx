@@ -1,13 +1,9 @@
-import EyeInvisibleOutlined from "@ant-design/icons/lib/icons/EyeInvisibleOutlined";
-import EyeOutlined from "@ant-design/icons/lib/icons/EyeOutlined";
 import { Card, message, Tag, Tooltip } from "antd";
 import API from "api";
-import Scene from "components/Scene/Scene";
-import SceneForm from "components/SceneForm/SceneForm";
 import { TQuest } from "models/quest";
 import { TScene } from "models/scene";
-import { StateGame, StateQuests, StateScene, StateUI } from "models/store";
-import { memo, useState } from "react";
+import { StateQuests, StateUI } from "models/store";
+import { memo } from "react";
 import { Handle, Position } from "react-flow-renderer";
 import { useDispatch, useSelector } from "react-redux";
 import { setQuest, setScene } from "store/actions";
@@ -22,13 +18,10 @@ export default memo(
     isConnectable: any;
   }) => {
     const Dispatch = useDispatch();
-    const [showStatus, setShowStatus] = useState<boolean>(false);
 
     const { quest } = useSelector(
       (state: { quest: StateQuests }) => state.quest
     );
-    const { scene } = useSelector((state: { scene: StateScene }) => state);
-    const { game } = useSelector((state: { game: StateGame }) => state);
     const { ui } = useSelector((state: { ui: StateUI }) => state);
 
     const buttonLinked = (params: any) => {
@@ -139,18 +132,7 @@ export default memo(
     };
 
     return (
-      <Card
-        className="map-card"
-        title={data.property.Text}
-        extra={
-          game.status === "stop" && showStatus ? (
-            <EyeOutlined onClick={() => setShowStatus(!showStatus)} />
-          ) : (
-            <EyeInvisibleOutlined onClick={() => setShowStatus(!showStatus)} />
-          )
-        }
-      >
-        {showStatus && <SceneForm />}
+      <Card className="map-card" title={data.property.Text}>
         <Handles />
       </Card>
     );

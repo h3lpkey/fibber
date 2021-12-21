@@ -12,6 +12,8 @@ export type TScene = {
   PersonPositionLeft: boolean;
   created_at: string;
   updated_at: string;
+  x: number;
+  y: number;
 };
 
 export type TBackground = {

@@ -69,6 +69,12 @@
       "type": "component",
       "repeatable": true,
       "component": "to-scene.to-scene"
+    },
+    "x": {
+      "type": "float"
+    },
+    "y": {
+      "type": "float"
     }
   }
 }

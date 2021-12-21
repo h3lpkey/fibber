@@ -2,22 +2,17 @@ import { PlusSquareOutlined, ToolOutlined } from "@ant-design/icons";
 import { Space, Spin } from "antd";
 import API from "api/index";
 import CSS from "csstype";
-import dagre from "dagre";
 import { TQuest } from "models/quest";
 import { TScene } from "models/scene";
 import { StateQuests, StateScene, StateUI } from "models/store";
-import { ReactElement, useCallback, useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import ReactFlow, {
   Background,
   BackgroundVariant,
-  Connection,
   ControlButton,
   Controls,
-  Edge,
-  isNode,
   MiniMap,
-  Node,
-  Position,
+  useStoreState,
 } from "react-flow-renderer";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
@@ -27,10 +22,10 @@ import CustomNode from "./CustomNode";
 interface TMapNode {
   id: string;
   type?: "input" | "default" | "output" | "selectorNode" | undefined;
-  draggable: boolean;
+  draggable?: boolean;
   data: {
     label: string | ReactElement;
-    property?: TScene | {};
+    property: TScene;
   };
   position: {
     x: number;
@@ -49,41 +44,10 @@ interface TMapEdge {
   animated?: boolean;
 }
 
-const elements = [
-  {
-    id: "1",
-    type: "input", // input node
-    data: { label: "Input Node" },
-    position: { x: 250, y: 25 },
-  },
-  // default node
-  {
-    id: "2",
-    // you can also pass a React component as a label
-    data: { label: <div>Default Node</div> },
-    position: { x: 100, y: 125 },
-  },
-  {
-    id: "3",
-    type: "output", // output node
-    data: { label: "Output Node" },
-    position: { x: 250, y: 250 },
-  },
-  // animated edge
-  { id: "e1-2", source: "1", target: "2", animated: true },
-  { id: "e2-3", source: "2", target: "3" },
-];
-
-const dagreGraph = new dagre.graphlib.Graph();
-dagreGraph.setDefaultEdgeLabel(() => ({}));
-
-const nodeWidth = 400;
-const nodeHeight = 200;
-
 const Map = (): ReactElement => {
   let params: { questId: string } = useParams();
   const Dispatch = useDispatch();
-  const [questMap, setQuestMap] = useState<any>(elements);
+  const [questMap, setQuestMap] = useState<any>([]);
   const [isLoading, setLoading] = useState<boolean>(true);
   const [lastElement, setLastElement] = useState<any>();
   const [sceneId, setSceneId] = useState<number>(0);
@@ -100,19 +64,19 @@ const Map = (): ReactElement => {
     questData.Scenes.forEach((sceneObj) => {
       const text = sceneObj.Text;
       const firstWords = `${text.substring(0, 30)}`;
-      nodes.push({
+      const newNode: TMapNode = {
         id: sceneObj.id.toString(),
         type: `selectorNode`,
         data: {
           label: firstWords,
           property: sceneObj,
         },
-        draggable: false,
         position: {
-          x: 180 / 2 + Math.random() / 1000,
-          y: 40 / 2,
+          x: sceneObj?.x,
+          y: sceneObj?.y,
         },
-      });
+      };
+      nodes.push(newNode);
 
       if (sceneObj.ToScenes) {
         sceneObj.ToScenes.forEach((ToSceneLocal) => {
@@ -144,7 +108,6 @@ const Map = (): ReactElement => {
   useEffect(() => {
     if (quest.hasOwnProperty("Scenes")) {
       setLoading(true);
-
       setQuestMap(questDataToMap(quest));
       setLoading(false);
     }
@@ -183,46 +146,7 @@ const Map = (): ReactElement => {
     );
   }, [sceneId, setQuestMap, setSceneId, scene]);
 
-  const getLayoutedElements = (elements: any, direction = "TB") => {
-    const isHorizontal = direction === "LR";
-    dagreGraph.setGraph({ rankdir: direction });
-
-    elements.forEach((el: any) => {
-      if (isNode(el)) {
-        dagreGraph.setNode(el.id, { width: nodeWidth, height: nodeHeight });
-      } else {
-        dagreGraph.setEdge(el.source, el.target);
-      }
-    });
-
-    dagre.layout(dagreGraph);
-
-    return elements.map((el: Node<any> | Connection | Edge<any>) => {
-      if (isNode(el)) {
-        const nodeWithPosition = dagreGraph.node(el.id);
-        el.targetPosition = isHorizontal ? Position.Left : Position.Top;
-        el.sourcePosition = isHorizontal ? Position.Right : Position.Bottom;
-        el.position = {
-          x: nodeWithPosition.x - nodeWidth / 2 + Math.random() / 1000,
-          y: nodeWithPosition.y - nodeHeight / 2,
-        };
-      }
-
-      return el;
-    });
-  };
-
-  const layoutedElements = getLayoutedElements(questMap);
-  const onLayout = useCallback(
-    (direction) => {
-      const layoutedElements = getLayoutedElements(elements, direction);
-      setQuestMap(layoutedElements);
-    },
-    [elements]
-  );
-
   const onClickNode = (event: any, element: any) => {
-    console.log("element", element);
     setLastElement(element);
     const scene = quest.Scenes.find(
       (scene) => scene.id.toString() === element.id
@@ -234,11 +158,11 @@ const Map = (): ReactElement => {
   };
 
   const addNode = () => {
-    console.log("nice");
-    console.log(questMap);
     API.scene
       .createScene({
         Text: "new scene",
+        x: lastElement.position.x,
+        y: lastElement.position.y + 250,
       })
       .then((newScene) => {
         const scenes = quest.Scenes.concat(newScene);
@@ -253,6 +177,38 @@ const Map = (): ReactElement => {
         Dispatch(setQuest(newQuest));
         setQuestMap(questDataToMap(newQuest));
       });
+  };
+
+  const updateNodePositionToScene = (event: any, node: TMapNode | any) => {
+    const sceneId = node.data.property?.id;
+    console.log(event);
+    API.scene.updateScene(sceneId, {
+      x: event.xx2,
+      y: event.y,
+    });
+    // .then(() => updateQuest());
+  };
+
+  const NodesDebugger = () => {
+    const nodes = useStoreState((state) => state.nodes);
+
+    // console.log("nodes", nodes[nodes.length - 1]);
+
+    return null;
+  };
+
+  const savePosition = () => {
+    console.log(questMap);
+  };
+
+  const updateQuest = () => {
+    API.quest
+      .getQuestById(params.questId)
+      .then((questData: TQuest) => {
+        setQuestMap(questDataToMap(questData));
+        setLoading(false);
+      })
+      .catch((e) => {});
   };
 
   const toggleTooltips = () => {
@@ -273,8 +229,10 @@ const Map = (): ReactElement => {
         <ReactFlow
           elements={questMap}
           onElementClick={onClickNode}
+          onNodeDragStop={updateNodePositionToScene}
           nodeTypes={nodeTypes}
         >
+          <NodesDebugger />
           <MiniMap
             nodeColor={(node: any) => {
               switch (node.type) {
@@ -301,6 +259,9 @@ const Map = (): ReactElement => {
               <PlusSquareOutlined />
             </ControlButton>
             <ControlButton onClick={() => toggleTooltips()}>
+              <ToolOutlined />
+            </ControlButton>
+            <ControlButton onClick={() => savePosition()}>
               <ToolOutlined />
             </ControlButton>
           </Controls>
