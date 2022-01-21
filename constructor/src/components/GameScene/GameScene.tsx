@@ -1,4 +1,5 @@
 import { Button, message, Space, Spin } from "antd";
+import { motion } from "framer-motion";
 import { Tbutton, TScene, TToScene } from "models/scene";
 import { StateGame, StateQuests, StateScene } from "models/store";
 import { ReactElement, useEffect, useState } from "react";
@@ -15,16 +16,56 @@ import "./GameScene.sass";
 
 const GameScene = (): ReactElement => {
   const Dispatch = useDispatch();
+
   const url = window.location.hostname;
   const { quest } = useSelector((state: { quest: StateQuests }) => state.quest);
   const { scene } = useSelector((state: { scene: StateScene }) => state);
   const { game } = useSelector((state: { game: StateGame }) => state);
 
+  const animationVariants = {
+    showNotification: {
+      y: [0, 50],
+      opacity: [0, 1],
+    },
+    hideNotification: {},
+  };
+
+  const sentence = {
+    hidden: {
+      opacity: 1,
+    },
+    visible: {
+      opacity: 1,
+      transition: {
+        delay: 1,
+        staggerChildren: 0.05,
+      },
+    },
+  };
+
+  const letter = {
+    hidden: {
+      opacity: 0,
+      y: 50,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+    },
+  };
+
   const [currentMusic, setCurrentMusic] = useState("");
   const [currentScene, setCurrentScene] = useState(scene);
+  const [notificationAnimate, setNotificationAnimate] = useState(false);
+  const [animatePerson, setAnimatePerson] = useState(false);
 
   useEffect(() => {
     setCurrentScene(scene);
+    if (currentScene.Person.url === scene.Person.url) {
+      setAnimatePerson(false);
+    } else {
+      setAnimatePerson(true);
+    }
   }, [scene]);
 
   if (scene === undefined || scene.id === undefined) {
@@ -53,7 +94,7 @@ const GameScene = (): ReactElement => {
     return (
       <ReactPlayer
         className="music-player"
-        volume={100}
+        volume={1}
         loop
         playing={game.music === "play"}
         url={scene.Music && `http://${url}:1337${scene.Music.url}`}
@@ -122,7 +163,15 @@ const GameScene = (): ReactElement => {
   const nextSceneById = (id: number) => {
     const sceneFind = quest.Scenes.find((scene) => scene.id === id);
     if (sceneFind) {
-      Dispatch(setScene(sceneFind));
+      if (currentScene.Notification) {
+        setNotificationAnimate(true);
+        setTimeout(() => {
+          setNotificationAnimate(false);
+          Dispatch(setScene(sceneFind));
+        }, 1500);
+      } else {
+        Dispatch(setScene(sceneFind));
+      }
     }
   };
 
@@ -132,9 +181,24 @@ const GameScene = (): ReactElement => {
       onClick={() => {
         nextScenByToScene(currentScene.ToScenes);
       }}
+      key={currentScene.id}
     >
       <Menu />
       <MusicPlayer />
+      {currentScene.Notification && notificationAnimate && (
+        <div className="notification">
+          <motion.div
+            initial={{ opacity: 0, y: 0 }}
+            animate={{ opacity: 1, y: 50 }}
+            transition={{
+              duration: 0.3,
+              ease: "easeInOut",
+            }}
+          >
+            {currentScene.Notification}
+          </motion.div>
+        </div>
+      )}
       {currentScene.Background && (
         <div className="background">
           <img
@@ -146,10 +210,21 @@ const GameScene = (): ReactElement => {
       )}
       {currentScene.Person && (
         <div className={`person ${scene.PersonPositionLeft && "person-left"}`}>
-          <img
-            src={`http://${url}:1337${currentScene.Person.url}`}
-            alt="person"
-          />
+          <motion.div
+            animate={{
+              x: [scene.PersonPositionLeft ? 100 : -50, 0],
+              opacity: [0.8, 1],
+            }}
+            transition={{
+              duration: animatePerson ? 0.3 : 0,
+              ease: "easeInOut",
+            }}
+          >
+            <img
+              src={`http://${url}:1337${currentScene.Person.url}`}
+              alt="person"
+            />
+          </motion.div>
         </div>
       )}
       <div
@@ -172,7 +247,17 @@ const GameScene = (): ReactElement => {
             currentScene.PersonPositionLeft && "controls-background-reverse"
           }`}
         >
-          <p className="dialog">{currentScene.Text}</p>
+          <p className="dialog">
+            <motion.p variants={sentence} initial="hidden" animate="visible">
+              {currentScene.Text.split("").map((char, index) => {
+                return (
+                  <motion.span key={`${char}-${index}`} variants={letter}>
+                    {char}
+                  </motion.span>
+                );
+              })}
+            </motion.p>
+          </p>
           <div className="buttons">
             {currentScene.Buttons?.map((button) => {
               if (button.TriggerGetter) {

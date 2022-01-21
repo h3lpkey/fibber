@@ -16,9 +16,10 @@ const Navbar = (): ReactElement => {
   const GameInfo = () => {
     return (
       <>
-        {game.collectedTriggers.map((trigger) => {
+        {game.collectedTriggers.map((trigger, index) => {
           return (
             <Tag
+              key={`${trigger}-${index}`}
               closable
               onClose={() => {
                 removeTrigger(trigger);

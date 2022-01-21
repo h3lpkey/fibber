@@ -222,7 +222,6 @@ const Map = (): ReactElement => {
   );
 
   const onClickNode = (event: any, element: any) => {
-    console.log("element", element);
     setLastElement(element);
     const scene = quest.Scenes.find(
       (scene) => scene.id.toString() === element.id
@@ -234,8 +233,6 @@ const Map = (): ReactElement => {
   };
 
   const addNode = () => {
-    console.log("nice");
-    console.log(questMap);
     API.scene
       .createScene({
         Text: "new scene",
